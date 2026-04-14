@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="JaTakTilbud.API/JaTakTilbud.API.csproj" />
+  <Project Path="JaTakTilbud.Client/JaTakTilbud.Client.csproj" />
+  <Project Path="JaTakTilbud.Contracts/JaTakTilbud.Contracts.csproj" />
+  <Project Path="JaTakTilbud.Core/JaTakTilbud.Core.csproj" />
+  <Project Path="JaTakTilbud.Infrastructure/JaTakTilbud.Infrastructure.csproj" />
+  <Project Path="JaTakTilbud.Web/JaTakTilbud.Web.csproj" />
+</Solution>

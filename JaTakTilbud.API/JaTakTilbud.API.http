@@ -1,0 +1,6 @@
+@JaTakTilbud.API_HostAddress = http://localhost:5007
+
+GET {{JaTakTilbud.API_HostAddress}}/api/
+Accept: application/json
+
+###
