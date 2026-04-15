@@ -83,7 +83,7 @@ public class CampaignsController : ControllerBase
                     ProductId = p.ProductId,
                     Name = product.Name,
                     Description = product.Description,
-                    NormalPrice = product.NormalPrice,
+                    NormalPrice = product.Price,
                     CampaignPrice = p.CampaignPrice,
                     Quantity = p.Quantity,
                     ReservedQuantity = p.ReservedQuantity

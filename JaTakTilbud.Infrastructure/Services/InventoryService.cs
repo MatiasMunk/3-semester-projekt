@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JaTakTilbud.Core.Services
+namespace JaTakTilbud.Infrastructure.Services;
+
+internal class InventoryService
 {
-    internal class InventoryService
-    {
-    }
 }
