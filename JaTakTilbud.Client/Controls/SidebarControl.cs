@@ -26,8 +26,15 @@ public class SidebarControl : UserControl
 
         // Add buttons (top-down order)
         AddButton("Dashboard");
+
+        AddButton("CreateProduct");
+        AddButton("Products");
+
         AddButton("CreateCampaign");
         AddButton("ActiveCampaigns");
+
+        AddButton("CreateCampaignProduct");
+
         AddButton("Orders");
         AddButton("Customers");
         AddButton("Settings");
@@ -85,14 +92,21 @@ public class SidebarControl : UserControl
         }
     }
 
-    private string GetDisplayName(string route)
+    private static string GetDisplayName(string route)
     {
         return route switch
         {
             "Dashboard" => "Forside",
-            "CreateCampaign" => "Opret Nyt Tilbud",
-            "ActiveCampaigns" => "Aktive Tilbud",
-            "Orders" => "Ordre-oversigt",
+
+            "CreateProduct" => "Opret Produkt",
+            "Products" => "Produkter",
+
+            "CreateCampaign" => "Opret Kampagne",
+            "ActiveCampaigns" => "Aktive Kampagner",
+
+            "CreateCampaignProduct" => "Opret kampagneprodukt",
+
+            "Orders" => "Aktive reservationer",
             "Customers" => "Kunder",
             "Settings" => "Indstillinger",
             _ => route

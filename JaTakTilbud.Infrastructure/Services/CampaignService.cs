@@ -18,11 +18,21 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // GET ALL (without products)
     // -----------------------------
-    public Result<IEnumerable<Campaign>> GetAll()
+    public async Task<Result<IEnumerable<Campaign>>> GetAllAsync()
     {
         using var conn = _factory.Create();
 
-        var campaigns = conn.Query<Campaign>("SELECT * FROM Campaigns");
+        var campaigns = await conn.QueryAsync<Campaign>(@"
+            SELECT
+                Id,
+                title       AS Title,
+                description AS Description,
+                createdAt   AS CreatedAt,
+                startTime   AS StartTime,
+                endTime     AS EndTime,
+                isActive    AS IsActive
+            FROM Campaigns
+        ");
 
         return Result<IEnumerable<Campaign>>.Success(campaigns);
     }
@@ -30,25 +40,43 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // GET BY ID (WITH PRODUCTS)
     // -----------------------------
-    public Result<Campaign> GetById(int id)
+    public async Task<Result<Campaign>> GetByIdAsync(int id)
     {
         using var conn = _factory.Create();
 
         var sql = @"
-                SELECT 
-                    c.Id, c.Title, c.Desc, c.CreatedAt, c.StartTime, c.EndTime, c.IsActive,
-                    p.Id, p.Name, p.NormalPrice
-                FROM Campaigns c
-                LEFT JOIN CampaignProducts cp ON cp.CampaignId = c.Id
-                LEFT JOIN Products p ON p.Id = cp.ProductId
-                WHERE c.Id = @Id
-                ";
+            SELECT 
+                c.Id,
+                c.title       AS Title,
+                c.description AS Description,
+                c.createdAt   AS CreatedAt,
+                c.startTime   AS StartTime,
+                c.endTime     AS EndTime,
+                c.isActive    AS IsActive,
+
+                cp.Id,
+                cp.offerPrice       AS OfferPrice,
+                cp.quantity         AS Quantity,
+                cp.reservedQuantity AS ReservedQuantity,
+                cp.campaignId_FK,
+                cp.productId_FK,
+
+                p.Id,
+                p.name        AS Name,
+                p.description AS Description,
+                p.normalPrice AS Price
+
+            FROM Campaigns c
+            LEFT JOIN CampaignProducts cp ON cp.campaignId_FK = c.Id
+            LEFT JOIN Products p ON p.Id = cp.productId_FK
+            WHERE c.Id = @Id
+        ";
 
         var campaignDict = new Dictionary<int, Campaign>();
 
-        var result = conn.Query<Campaign, CampaignProduct, Campaign>(
+        var result = await conn.QueryAsync<Campaign, CampaignProduct, Product, Campaign>(
             sql,
-            (campaign, product) =>
+            (campaign, cp, product) =>
             {
                 if (!campaignDict.TryGetValue(campaign.Id, out var existing))
                 {
@@ -57,15 +85,16 @@ public class CampaignService : ICampaignService
                     campaignDict.Add(existing.Id, existing);
                 }
 
-                if (product != null)
+                if (cp != null)
                 {
-                    existing.Products.Add(product);
+                    cp.Product = product;
+                    existing.Products.Add(cp);
                 }
 
                 return existing;
             },
             new { Id = id },
-            splitOn: "Id"
+            splitOn: "Id,Id"
         );
 
         var campaignResult = campaignDict.Values.FirstOrDefault();
@@ -79,7 +108,7 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // CREATE
     // -----------------------------
-    public Result<Campaign> Create(Campaign campaign)
+    public async Task<Result<Campaign>> CreateAsync(Campaign campaign)
     {
         if (string.IsNullOrWhiteSpace(campaign.Title))
             return Result<Campaign>.Failure("Campaign title is required");
@@ -90,12 +119,13 @@ public class CampaignService : ICampaignService
         campaign.IsActive = true;
 
         var sql = @"
-                INSERT INTO Campaigns (Title, Desc, CreatedAt, StartTime, EndTime, IsActive)
-                VALUES (@Title, @Desc, @CreatedAt, @StartTime, @EndTime, @IsActive);
-                SELECT CAST(SCOPE_IDENTITY() as int);
-                ";
+            INSERT INTO Campaigns (title, description, createdAt, startTime, endTime, isActive)
+            VALUES (@Title, @Description, @CreatedAt, @StartTime, @EndTime, @IsActive);
 
-        var id = conn.QuerySingle<int>(sql, campaign);
+            SELECT CAST(SCOPE_IDENTITY() as int);
+        ";
+
+        var id = await conn.QuerySingleAsync<int>(sql, campaign);
         campaign.Id = id;
 
         return Result<Campaign>.Success(campaign);
@@ -104,22 +134,23 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // UPDATE
     // -----------------------------
-    public Result Update(Campaign campaign)
+    public async Task<Result> UpdateAsync(Campaign campaign)
     {
         if (string.IsNullOrWhiteSpace(campaign.Title))
             return Result.Failure("Campaign title is required");
 
         using var conn = _factory.Create();
 
-        var affected = conn.Execute(@"
-                                    UPDATE Campaigns
-                                    SET Title = @Title,
-                                        Desc = @Desc,
-                                        StartTime = @StartTime,
-                                        EndTime = @EndTime,
-                                        IsActive = @IsActive
-                                    WHERE Id = @Id
-                                    ", campaign);
+        var affected = await conn.ExecuteAsync(@"
+            UPDATE Campaigns
+            SET 
+                title = @Title,
+                description = @Description,
+                startTime = @StartTime,
+                endTime = @EndTime,
+                isActive = @IsActive
+            WHERE Id = @Id
+        ", campaign);
 
         if (affected == 0)
             return Result.Failure("Campaign not found");
@@ -130,16 +161,19 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // DELETE
     // -----------------------------
-    public Result Delete(int id)
+    public async Task<Result> DeleteAsync(int id)
     {
         using var conn = _factory.Create();
 
-        // Important: delete relations first
-        conn.Execute("DELETE FROM CampaignProducts WHERE CampaignId = @Id", new { Id = id });
+        await conn.ExecuteAsync(@"
+            DELETE FROM CampaignProducts 
+            WHERE campaignId_FK = @Id
+        ", new { Id = id });
 
-        var affected = conn.Execute(
-            "DELETE FROM Campaigns WHERE Id = @Id",
-            new { Id = id });
+        var affected = await conn.ExecuteAsync(@"
+            DELETE FROM Campaigns 
+            WHERE Id = @Id
+        ", new { Id = id });
 
         if (affected == 0)
             return Result.Failure("Campaign not found");
@@ -150,22 +184,25 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // ADD PRODUCT TO CAMPAIGN
     // -----------------------------
-    public Result AddProduct(int campaignId, int productId)
+    public async Task<Result> AddProductAsync(int campaignId, int productId, decimal offerPrice, int quantity)
     {
         using var conn = _factory.Create();
 
-        var exists = conn.QueryFirstOrDefault<int>(@"
-                                                    SELECT 1 FROM CampaignProducts 
-                                                    WHERE CampaignId = @CampaignId AND ProductId = @ProductId
-                                                    ", new { campaignId, productId });
+        var exists = await conn.QueryFirstOrDefaultAsync<int>(@"
+            SELECT 1 
+            FROM CampaignProducts 
+            WHERE campaignId_FK = @campaignId AND productId_FK = @productId
+        ", new { campaignId, productId });
 
         if (exists == 1)
             return Result.Failure("Product already in campaign");
 
-        conn.Execute(@"
-                    INSERT INTO CampaignProducts (CampaignId, ProductId)
-                    VALUES (@CampaignId, @ProductId)
-                    ", new { campaignId, productId });
+        await conn.ExecuteAsync(@"
+            INSERT INTO CampaignProducts 
+                (offerPrice, quantity, campaignId_FK, productId_FK)
+            VALUES 
+                (@offerPrice, @quantity, @campaignId, @productId)
+        ", new { campaignId, productId, offerPrice, quantity });
 
         return Result.Success();
     }
@@ -173,14 +210,14 @@ public class CampaignService : ICampaignService
     // -----------------------------
     // REMOVE PRODUCT FROM CAMPAIGN
     // -----------------------------
-    public Result RemoveProduct(int campaignId, int productId)
+    public async Task<Result> RemoveProductAsync(int campaignId, int productId)
     {
         using var conn = _factory.Create();
 
-        conn.Execute(@"
-                    DELETE FROM CampaignProducts
-                    WHERE CampaignId = @CampaignId AND ProductId = @ProductId
-                    ", new { campaignId, productId });
+        await conn.ExecuteAsync(@"
+            DELETE FROM CampaignProducts
+            WHERE campaignId_FK = @campaignId AND productId_FK = @productId
+        ", new { campaignId, productId });
 
         return Result.Success();
     }

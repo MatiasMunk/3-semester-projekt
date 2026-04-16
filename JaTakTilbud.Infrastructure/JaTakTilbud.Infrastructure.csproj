@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JaTakTilbud.Contracts\JaTakTilbud.Contracts.csproj" />
     <ProjectReference Include="..\JaTakTilbud.Core\JaTakTilbud.Core.csproj" />
   </ItemGroup>
 

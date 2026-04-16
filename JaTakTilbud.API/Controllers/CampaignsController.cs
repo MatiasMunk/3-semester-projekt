@@ -5,28 +5,19 @@ using JaTakTilbud.Contracts;
 
 namespace JaTakTilbud.API.Controllers;
 
-/*
- * Denne controller håndterer CRUD-operationer for kampagner.
- * Den bruger ICampaignService til at udføre forretningslogikken og returnerer passende HTTP-responser baseret på resultatet af hver operation.
- */
 [ApiController]
 [Route("api/[controller]")]
-public class CampaignsController : ControllerBase
+public class CampaignsController(ICampaignService campaignService) : ControllerBase
 {
-    private readonly ICampaignService _campaignService;
-
-    public CampaignsController(ICampaignService campaignService)
-    {
-        _campaignService = campaignService;
-    }
+    private readonly ICampaignService _campaignService = campaignService;
 
     // -----------------------------
     // GET: api/campaigns
     // -----------------------------
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var result = _campaignService.GetAll();
+        var result = await _campaignService.GetAllAsync();
 
         if (result.IsFailure)
             return BadRequest(result.Error);
@@ -35,7 +26,7 @@ public class CampaignsController : ControllerBase
         {
             Id = c.Id,
             Title = c.Title,
-            Desc = c.Desc,
+            Desc = c.Description,
             StartTime = c.StartTime,
             EndTime = c.EndTime,
             IsActive = c.IsActive
@@ -46,52 +37,40 @@ public class CampaignsController : ControllerBase
 
     // -----------------------------
     // GET: api/campaigns/{id}
-    // (WITH PRODUCTS)
     // -----------------------------
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var result = _campaignService.GetById(id);
+        var result = await _campaignService.GetByIdAsync(id);
 
         if (result.IsFailure)
             return NotFound(result.Error);
 
         var c = result.Value;
 
-        // Map the campaign to a DTO, including its products.
-        // We need to check for null products before accessing their properties.
         var dto = new CampaignDto
         {
             Id = c.Id,
             Title = c.Title,
-            Desc = c.Desc,
+            Desc = c.Description,
             StartTime = c.StartTime,
             EndTime = c.EndTime,
             IsActive = c.IsActive,
 
-            // Use where to filter out any products that might be null, and then select to create the DTOs
-            Products = c.Products
-            .Select(p =>
-            {
-                if (p.Product == null)
-                    return null;
-
-                var product = p.Product;
-
-                return new CampaignProductDto
+            Products = c.Products?
+                .Where(p => p.Product != null)
+                .Select(p => new CampaignProductDto
                 {
                     ProductId = p.ProductId,
-                    Name = product.Name,
-                    Description = product.Description,
-                    NormalPrice = product.Price,
+                    Name = p.Product!.Name,
+                    Description = p.Product.Description,
+                    NormalPrice = p.Product.Price,
+
                     CampaignPrice = p.CampaignPrice,
                     Quantity = p.Quantity,
                     ReservedQuantity = p.ReservedQuantity
-                };
-            })
-            .Where(x => x != null)
-            .Cast<CampaignProductDto>()
-            .ToList()
+                })
+                .ToList()
         };
 
         return Ok(dto);
@@ -101,17 +80,17 @@ public class CampaignsController : ControllerBase
     // POST: api/campaigns
     // -----------------------------
     [HttpPost]
-    public IActionResult Create(CreateCampaignRequest request)
+    public async Task<IActionResult> Create(CreateCampaignRequest request)
     {
         var campaign = new Campaign
         {
             Title = request.Title,
-            Desc = request.Desc,
+            Description = request.Desc,
             StartTime = request.StartTime,
             EndTime = request.EndTime
         };
 
-        var result = _campaignService.Create(campaign);
+        var result = await _campaignService.CreateAsync(campaign);
 
         if (result.IsFailure)
             return BadRequest(result.Error);
@@ -120,7 +99,7 @@ public class CampaignsController : ControllerBase
         {
             Id = result.Value.Id,
             Title = result.Value.Title,
-            Desc = result.Value.Desc,
+            Desc = result.Value.Description,
             StartTime = result.Value.StartTime,
             EndTime = result.Value.EndTime,
             IsActive = result.Value.IsActive
@@ -133,19 +112,19 @@ public class CampaignsController : ControllerBase
     // PUT: api/campaigns/{id}
     // -----------------------------
     [HttpPut("{id}")]
-    public IActionResult Update(int id, UpdateCampaignRequest request)
+    public async Task<IActionResult> Update(int id, UpdateCampaignRequest request)
     {
         var campaign = new Campaign
         {
             Id = id,
             Title = request.Title,
-            Desc = request.Desc,
+            Description = request.Desc,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
             IsActive = request.IsActive
         };
 
-        var result = _campaignService.Update(campaign);
+        var result = await _campaignService.UpdateAsync(campaign);
 
         if (result.IsFailure)
             return BadRequest(result.Error);
@@ -157,9 +136,9 @@ public class CampaignsController : ControllerBase
     // DELETE: api/campaigns/{id}
     // -----------------------------
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var result = _campaignService.Delete(id);
+        var result = await _campaignService.DeleteAsync(id);
 
         if (result.IsFailure)
             return BadRequest(result.Error);
@@ -168,12 +147,17 @@ public class CampaignsController : ControllerBase
     }
 
     // -----------------------------
-    // POST: api/campaigns/{id}/products/{productId}
+    // POST: api/campaigns/{id}/products
     // -----------------------------
-    [HttpPost("{id}/products/{productId}")]
-    public IActionResult AddProduct(int id, int productId)
+    [HttpPost("{id}/products")]
+    public async Task<IActionResult> AddProduct(int id, AddCampaignProductRequest request)
     {
-        var result = _campaignService.AddProduct(id, productId);
+        var result = await _campaignService.AddProductAsync(
+            id,
+            request.ProductId,
+            request.CampaignPrice,
+            request.Quantity
+        );
 
         if (result.IsFailure)
             return BadRequest(result.Error);
@@ -185,9 +169,9 @@ public class CampaignsController : ControllerBase
     // DELETE: api/campaigns/{id}/products/{productId}
     // -----------------------------
     [HttpDelete("{id}/products/{productId}")]
-    public IActionResult RemoveProduct(int id, int productId)
+    public async Task<IActionResult> RemoveProduct(int id, int productId)
     {
-        var result = _campaignService.RemoveProduct(id, productId);
+        var result = await _campaignService.RemoveProductAsync(id, productId);
 
         if (result.IsFailure)
             return BadRequest(result.Error);

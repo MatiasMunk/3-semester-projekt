@@ -3,6 +3,7 @@
   <Project Path="JaTakTilbud.Client/JaTakTilbud.Client.csproj" />
   <Project Path="JaTakTilbud.Contracts/JaTakTilbud.Contracts.csproj" />
   <Project Path="JaTakTilbud.Core/JaTakTilbud.Core.csproj" />
+  <Project Path="JaTakTilbud.Http/JaTakTilbud.Http.csproj" Id="b47c3155-97e7-4c43-8314-54e120617ca8" />
   <Project Path="JaTakTilbud.Infrastructure/JaTakTilbud.Infrastructure.csproj" />
   <Project Path="JaTakTilbud.Web/JaTakTilbud.Web.csproj" />
 </Solution>

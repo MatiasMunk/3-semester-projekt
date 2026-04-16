@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JaTakTilbud.Core\JaTakTilbud.Core.csproj" />
+    <ProjectReference Include="..\JaTakTilbud.Http\JaTakTilbud.Http.csproj" />
   </ItemGroup>
 
 </Project>

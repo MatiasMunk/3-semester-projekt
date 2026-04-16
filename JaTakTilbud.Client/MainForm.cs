@@ -1,18 +1,29 @@
 using JaTakTilbud.Client.Controls;
 using JaTakTilbud.Client.Views;
 using JaTakTilbud.Client.UI;
+using JaTakTilbud.Http.Interfaces;
 
 namespace JaTakTilbud.Client;
 
+/// <summary>
+/// Main application window.
+/// Handles layout and navigation between views.
+/// Acts as root for dependency injection (manual).
+/// </summary>
 public partial class MainForm : Form
 {
     private Panel mainArea = new Panel();
     private Panel contentPanel = new Panel();
 
-    public MainForm()
+    // API dependencies
+    private readonly IProductApi _productApi;
+
+    public MainForm(IProductApi productApi)
     {
         InitializeComponent();
         InitializeLayout();
+
+        _productApi = productApi;
 
         BackColor = Theme.Background;
         contentPanel.BackColor = Theme.Background;
@@ -29,7 +40,7 @@ public partial class MainForm : Form
         mainArea.Dock = DockStyle.Fill;
 
         // =========================
-        // HEADER (MODERN LAYOUT)
+        // HEADER
         // =========================
         var header = new TableLayoutPanel();
         header.Dock = DockStyle.Top;
@@ -63,7 +74,7 @@ public partial class MainForm : Form
         header.Controls.Add(lblUser, 1, 0);
 
         // =========================
-        // CONTENT
+        // CONTENT AREA
         // =========================
         contentPanel.Dock = DockStyle.Fill;
 
@@ -74,6 +85,10 @@ public partial class MainForm : Form
         Controls.Add(sidebar);
     }
 
+    /// <summary>
+    /// Handles navigation between views.
+    /// Injects required dependencies into views.
+    /// </summary>
     private void LoadView(string viewName)
     {
         contentPanel.Controls.Clear();
@@ -81,7 +96,11 @@ public partial class MainForm : Form
         UserControl view = viewName switch
         {
             "Dashboard" => new DashboardView(),
-            "CreateCampaign" => new CreateCampaignView(),
+
+            "CreateProduct" => new CreateProductView(_productApi),
+
+            "CreateCampaignProduct" => new CreateCampaignProductView(_productApi),
+
             _ => new DashboardView()
         };
 

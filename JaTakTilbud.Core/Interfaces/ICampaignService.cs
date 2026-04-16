@@ -6,22 +6,42 @@ namespace JaTakTilbud.Core.Interfaces;
 public interface ICampaignService
 {
     // -----------------------------
-    // Campaign CRUD
+    // GET ALL CAMPAIGNS (no products)
     // -----------------------------
-    Result<IEnumerable<Campaign>> GetAll();
-
-    Result<Campaign> GetById(int id);
-
-    Result<Campaign> Create(Campaign campaign);
-
-    Result Update(Campaign campaign);
-
-    Result Delete(int id);
+    Task<Result<IEnumerable<Campaign>>> GetAllAsync();
 
     // -----------------------------
-    // Campaign - Product relations
+    // GET CAMPAIGN BY ID (WITH PRODUCTS)
     // -----------------------------
-    Result AddProduct(int campaignId, int productId);
+    Task<Result<Campaign>> GetByIdAsync(int id);
 
-    Result RemoveProduct(int campaignId, int productId);
+    // -----------------------------
+    // CREATE CAMPAIGN
+    // -----------------------------
+    Task<Result<Campaign>> CreateAsync(Campaign campaign);
+
+    // -----------------------------
+    // UPDATE CAMPAIGN
+    // -----------------------------
+    Task<Result> UpdateAsync(Campaign campaign);
+
+    // -----------------------------
+    // DELETE CAMPAIGN
+    // -----------------------------
+    Task<Result> DeleteAsync(int id);
+
+    // -----------------------------
+    // ADD PRODUCT TO CAMPAIGN
+    // -----------------------------
+    Task<Result> AddProductAsync(
+        int campaignId,
+        int productId,
+        decimal offerPrice,
+        int quantity
+    );
+
+    // -----------------------------
+    // REMOVE PRODUCT FROM CAMPAIGN
+    // -----------------------------
+    Task<Result> RemoveProductAsync(int campaignId, int productId);
 }

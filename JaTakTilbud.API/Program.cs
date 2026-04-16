@@ -3,7 +3,6 @@ using JaTakTilbud.Core.Interfaces;
 using JaTakTilbud.Infrastructure.Data;
 using JaTakTilbud.Infrastructure.Services;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,27 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services.AddControllers();
-
-// Swagger (with JWT support)
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "JaTakTilbud API",
-        Version = "v1"
-    });
-
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter 'Bearer {token}'"
-    });
-});
 
 // -----------------------------
 // Database (Dapper)
@@ -46,12 +24,12 @@ builder.Services.AddSingleton(new DbConnectionFactory(
 
 // scoped services
 builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // -----------------------------
-// OpenID Connect
+// OpenID Connect (Swagger + Auth (Centralized))
 // -----------------------------
-
-OpenIdService oidcConfig = new();
+var oidcConfig = new OpenIdService();
 oidcConfig.ConfigureBuilder(builder);
 
 // -----------------------------
@@ -77,12 +55,6 @@ var app = builder.Build();
 // -----------------------------
 // Middleware
 // -----------------------------
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseForwardedHeaders();
 
