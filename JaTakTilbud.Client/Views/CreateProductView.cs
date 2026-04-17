@@ -26,10 +26,10 @@ public partial class CreateProductView : UserControl
         {
             var request = new CreateProductRequest
             {
-                Name = txtName.Text.Trim(),
-                Description = txtDescription.Text.Trim(),
-                Price = decimal.TryParse(txtPrice.Text, out var price) ? price : 0,
-                ImageUrl = txtImageUrl.Text.Trim()
+                Name = txtName.TextValue.Trim(),
+                Description = txtDescription.TextValue.Trim(),
+                Price = decimal.TryParse(txtPrice.TextValue, out var price) ? price : 0,
+                ImageUrl = txtImageUrl.TextValue.Trim()
             };
 
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -52,9 +52,9 @@ public partial class CreateProductView : UserControl
 
     private void ClearForm()
     {
-        txtName.Text = "";
-        txtDescription.Text = "";
-        txtPrice.Text = "";
-        txtImageUrl.Text = "";
+        txtName.TextValue = "";
+        txtDescription.TextValue = "";
+        txtPrice.TextValue = "";
+        txtImageUrl.TextValue = "";
     }
 }

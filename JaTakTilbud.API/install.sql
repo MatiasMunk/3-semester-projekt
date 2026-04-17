@@ -80,6 +80,7 @@ CREATE TABLE Products (
 
     name NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
+	imageBlob VARBINARY(MAX) NULL
     isActive BIT NOT NULL DEFAULT 1
 );
 
@@ -108,6 +109,7 @@ CREATE TABLE Campaigns (
 
     title NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
+	imageBlob VARBINARY(MAX) NULL
     createdAt DATETIME2 NOT NULL,
     startTime DATETIME2 NOT NULL,
     endTime DATETIME2 NOT NULL,
@@ -129,7 +131,8 @@ CREATE TABLE CampaignProducts (
     offerPrice DECIMAL(10,2) NOT NULL,
     quantity INT NOT NULL,
     reservedQuantity INT NOT NULL DEFAULT 0,
-
+	imageBlob VARBINARY(MAX) NULL
+	
     CONSTRAINT UQ_CampaignProduct UNIQUE (campaignId_FK, productId_FK)
 );
 

@@ -7,6 +7,10 @@ using JaTakTilbud.Infrastructure.Data;
 
 namespace JaTakTilbud.Infrastructure.Services;
 
+/// <summary>
+/// Handles product persistence using Dapper.
+/// Includes price history handling via ProductPrices table.
+/// </summary>
 public class ProductService : IProductService
 {
     private readonly DbConnectionFactory _factory;
@@ -16,9 +20,12 @@ public class ProductService : IProductService
         _factory = factory;
     }
 
+    // --------------------------------------------------
+    // GET ALL PRODUCTS
+    // --------------------------------------------------
     public async Task<Result<IEnumerable<Product>>> GetAllAsync()
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var products = await conn.QueryAsync<Product>(@"
             SELECT 
@@ -35,9 +42,12 @@ public class ProductService : IProductService
         return Result<IEnumerable<Product>>.Success(products);
     }
 
+    // --------------------------------------------------
+    // GET PRODUCT BY ID
+    // --------------------------------------------------
     public async Task<Result<Product>> GetByIdAsync(int id)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var product = await conn.QueryFirstOrDefaultAsync<Product>(@"
             SELECT 
@@ -58,6 +68,9 @@ public class ProductService : IProductService
         return Result<Product>.Success(product);
     }
 
+    // --------------------------------------------------
+    // CREATE PRODUCT
+    // --------------------------------------------------
     public async Task<Result<Product>> CreateAsync(CreateProductRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Name))
@@ -66,24 +79,24 @@ public class ProductService : IProductService
         if (request.Price <= 0)
             return Result<Product>.Failure("Price must be greater than 0");
 
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
         using var transaction = conn.BeginTransaction();
 
         try
         {
             // 1. Insert product
             var productId = await conn.QuerySingleAsync<int>(@"
-            INSERT INTO Products (name, description, isActive)
-            VALUES (@Name, @Description, 1);
+                INSERT INTO Products (name, description, isActive)
+                VALUES (@Name, @Description, 1);
 
-            SELECT CAST(SCOPE_IDENTITY() as int);
-        ", request, transaction);
+                SELECT CAST(SCOPE_IDENTITY() as int);
+            ", request, transaction);
 
             // 2. Insert price
             await conn.ExecuteAsync(@"
-            INSERT INTO ProductPrices (productId_FK, amount, validFrom)
-            VALUES (@ProductId, @Price, GETDATE())
-        ", new
+                INSERT INTO ProductPrices (productId_FK, amount, validFrom)
+                VALUES (@ProductId, @Price, GETDATE())
+            ", new
             {
                 ProductId = productId,
                 request.Price
@@ -91,16 +104,14 @@ public class ProductService : IProductService
 
             transaction.Commit();
 
-            // 3. Return created product (important!)
-            var createdProduct = new Product
+            // 3. Return created product
+            return Result<Product>.Success(new Product
             {
                 Id = productId,
                 Name = request.Name,
-                Description = request.Description,
+                Description = request.Description ?? string.Empty,
                 Price = request.Price
-            };
-
-            return Result<Product>.Success(createdProduct);
+            });
         }
         catch
         {
@@ -109,51 +120,66 @@ public class ProductService : IProductService
         }
     }
 
+    // --------------------------------------------------
+    // UPDATE PRODUCT
+    // --------------------------------------------------
     public async Task<Result> UpdateAsync(Product product)
     {
         if (string.IsNullOrWhiteSpace(product.Name))
             return Result.Failure("Product name is required");
 
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
         using var transaction = conn.BeginTransaction();
 
-        var affected = await conn.ExecuteAsync(@"
-            UPDATE Products
-            SET name = @Name,
-                description = @Description
-            WHERE Id = @Id
-        ", product, transaction);
-
-        if (affected == 0)
-            return Result.Failure("Product not found");
-
-        await conn.ExecuteAsync(@"
-            UPDATE ProductPrices
-            SET validTo = GETDATE()
-            WHERE productId_FK = @Id
-            AND validTo IS NULL
-        ", new { product.Id }, transaction);
-
-        if (product.Price > 0)
+        try
         {
+            var affected = await conn.ExecuteAsync(@"
+                UPDATE Products
+                SET name = @Name,
+                    description = @Description
+                WHERE Id = @Id
+            ", product, transaction);
+
+            if (affected == 0)
+                return Result.Failure("Product not found");
+
+            // Close current price
             await conn.ExecuteAsync(@"
-                INSERT INTO ProductPrices (productId_FK, amount, validFrom)
-                VALUES (@ProductId, @Price, GETDATE())
-            ", new
+                UPDATE ProductPrices
+                SET validTo = GETDATE()
+                WHERE productId_FK = @Id
+                AND validTo IS NULL
+            ", new { product.Id }, transaction);
+
+            // Insert new price
+            if (product.Price > 0)
             {
-                ProductId = product.Id,
-                product.Price
-            }, transaction);
+                await conn.ExecuteAsync(@"
+                    INSERT INTO ProductPrices (productId_FK, amount, validFrom)
+                    VALUES (@ProductId, @Price, GETDATE())
+                ", new
+                {
+                    ProductId = product.Id,
+                    product.Price
+                }, transaction);
+            }
+
+            transaction.Commit();
+            return Result.Success();
         }
-
-        transaction.Commit();
-
-        return Result.Success();
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
+    // --------------------------------------------------
+    // DELETE PRODUCT
+    // --------------------------------------------------
     public async Task<Result> DeleteAsync(int id)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var affected = await conn.ExecuteAsync(@"
             DELETE FROM Products WHERE Id = @Id
