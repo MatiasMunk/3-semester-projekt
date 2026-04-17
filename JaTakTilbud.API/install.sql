@@ -109,7 +109,7 @@ CREATE TABLE Campaigns (
 
     title NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
-	imageBlob VARBINARY(MAX) NULL
+	imageBlob VARBINARY(MAX) NULL,
     createdAt DATETIME2 NOT NULL,
     startTime DATETIME2 NOT NULL,
     endTime DATETIME2 NOT NULL,
