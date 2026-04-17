@@ -1,6 +1,7 @@
 ﻿using JaTakTilbud.Client.UI;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace JaTakTilbud.Client.Controls;
@@ -19,12 +20,15 @@ public class SidebarControl : UserControl
     private void InitializeSidebar()
     {
         Dock = DockStyle.Left;
-        Width = 200;
-        BackColor = Theme.SidebarBg;
 
+        Width = 240;
+
+        BackColor = Theme.SidebarBg;
         Padding = new Padding(0, 20, 0, 0);
 
-        // Add buttons (top-down order)
+        // =========================
+        // BUTTONS
+        // =========================
         AddButton("Dashboard");
 
         AddButton("CreateProduct");
@@ -39,14 +43,14 @@ public class SidebarControl : UserControl
         AddButton("Customers");
         AddButton("Settings");
 
+        // =========================
+        // DEFAULT SELECTION
+        // =========================
         var dashboardButton = Controls
-        .OfType<Button>()
-        .FirstOrDefault(b => (string?)b.Tag == "Dashboard");
+            .OfType<Button>()
+            .FirstOrDefault(b => (string?)b.Tag == "Dashboard");
 
-        if (dashboardButton != null)
-        {
-            dashboardButton.PerformClick();
-        }
+        dashboardButton?.PerformClick();
     }
 
     private void AddButton(string name)
@@ -55,6 +59,7 @@ public class SidebarControl : UserControl
         {
             Text = GetDisplayName(name),
             Tag = name,
+
             Dock = DockStyle.Top,
             Height = 45,
 
@@ -63,10 +68,14 @@ public class SidebarControl : UserControl
 
             BackColor = Theme.SidebarBg,
             ForeColor = Color.White,
-            Font = Theme.BodyFont,
+
+            Font = new Font("Segoe UI", 9F, FontStyle.Regular),
 
             TextAlign = ContentAlignment.MiddleLeft,
             Padding = new Padding(20, 0, 0, 0),
+
+            AutoEllipsis = true,
+
             Cursor = Cursors.Hand
         };
 
@@ -109,6 +118,7 @@ public class SidebarControl : UserControl
             "Orders" => "Aktive reservationer",
             "Customers" => "Kunder",
             "Settings" => "Indstillinger",
+
             _ => route
         };
     }
