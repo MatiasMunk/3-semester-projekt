@@ -84,10 +84,16 @@ public class ProductService : IProductService
 
         try
         {
+            if (request.Price > 99999999.99m)
+                return Result<Product>.Failure("Price too large");
+
+            if (request.Price < 0)
+                return Result<Product>.Failure("Price cannot be negative");
+
             // 1. Insert product
             var productId = await conn.QuerySingleAsync<int>(@"
                 INSERT INTO Products (name, description, imageBlob, isActive)
-                VALUES (@Name, @Description, @ImageBytes, 1);
+                VALUES (@Name, @Description, @ImageBlob, 1);
 
                 SELECT CAST(SCOPE_IDENTITY() as int);
             ", request, transaction);

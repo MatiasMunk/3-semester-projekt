@@ -291,7 +291,7 @@ public partial class CreateProductView : UserControl
             {
                 Name = txtName.TextValue.Trim(),
                 Description = txtDescription.TextValue.Trim(),
-                Price = txtPrice.NumericValue ?? 0,
+                Price = decimal.TryParse(txtPrice.TextValue, out var price) ? price : 0,
                 ImageBlob = _imageBytes
             };
 
