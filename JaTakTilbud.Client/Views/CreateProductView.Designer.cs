@@ -1,58 +1,73 @@
 ﻿using JaTakTilbud.Client.UI.Controls;
 
-namespace JaTakTilbud.Client.Views;
-
-partial class CreateProductView
+namespace JaTakTilbud.Client.Views
 {
-    private UnderlineTextBox txtName;
-    private UnderlineTextBox txtDescription;
-    private UnderlineTextBox txtPrice;
-    private UnderlineTextBox txtImageUrl;
-    private ModernButton btnCreate;
-    private CardPanel container;
-
-    private void InitializeComponent()
+    partial class CreateProductView
     {
-        container = new CardPanel();
-        txtName = new UnderlineTextBox();
-        txtDescription = new UnderlineTextBox();
-        txtPrice = new UnderlineTextBox();
-        txtImageUrl = new UnderlineTextBox();
-        btnCreate = new ModernButton();
+        private System.ComponentModel.IContainer components = null;
 
-        SuspendLayout();
+        // =========================================================
+        // INPUT FIELDS
+        // =========================================================
+        private UnderlineTextBox txtName;
+        private UnderlineTextBox txtDescription;
+        private UnderlineTextBox txtPrice;
 
-        container.Dock = DockStyle.Fill;
+        // =========================================================
+        // PREVIEW
+        // =========================================================
+        private Label lblPreviewTitle;
+        private Label lblPreviewDesc;
+        private Label lblPreviewPrice;
 
-        txtName.PlaceholderText = "Product Name";
-        txtName.Top = 30;
-        txtName.Width = 300;
+        // =========================================================
+        // BUTTON
+        // =========================================================
+        private ModernButton btnCreate;
 
-        txtDescription.PlaceholderText = "Description";
-        txtDescription.Top = 80;
-        txtDescription.Width = 300;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+                components.Dispose();
 
-        txtPrice.PlaceholderText = "Price";
-        txtPrice.Top = 130;
-        txtPrice.Width = 300;
+            base.Dispose(disposing);
+        }
 
-        txtImageUrl.PlaceholderText = "Image URL";
-        txtImageUrl.Top = 180;
-        txtImageUrl.Width = 300;
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
 
-        btnCreate.Text = "Create Product";
-        btnCreate.Top = 240;
-        btnCreate.Width = 200;
-        btnCreate.Click += btnCreate_Click;
+            // =========================
+            // TEXT INPUTS
+            // =========================
+            txtName = new UnderlineTextBox();
+            txtDescription = new UnderlineTextBox();
+            txtPrice = new UnderlineTextBox();
 
-        container.Controls.Add(txtName);
-        container.Controls.Add(txtDescription);
-        container.Controls.Add(txtPrice);
-        container.Controls.Add(txtImageUrl);
-        container.Controls.Add(btnCreate);
+            txtPrice.IsNumeric = true;
+            txtPrice.AutoFormatCurrency = true;
 
-        Controls.Add(container);
+            // =========================
+            // PREVIEW LABELS
+            // =========================
+            lblPreviewTitle = new Label();
+            lblPreviewDesc = new Label();
+            lblPreviewPrice = new Label();
 
-        ResumeLayout(false);
+            // =========================
+            // BUTTON
+            // =========================
+            btnCreate = new ModernButton();
+
+            // =========================
+            // ROOT CONTROL
+            // =========================
+            SuspendLayout();
+
+            Name = "CreateProductView";
+            Size = new System.Drawing.Size(1000, 650);
+
+            ResumeLayout(false);
+        }
     }
 }

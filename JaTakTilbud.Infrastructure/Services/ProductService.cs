@@ -86,8 +86,8 @@ public class ProductService : IProductService
         {
             // 1. Insert product
             var productId = await conn.QuerySingleAsync<int>(@"
-                INSERT INTO Products (name, description, isActive)
-                VALUES (@Name, @Description, 1);
+                INSERT INTO Products (name, description, imageBlob, isActive)
+                VALUES (@Name, @Description, @ImageBytes, 1);
 
                 SELECT CAST(SCOPE_IDENTITY() as int);
             ", request, transaction);
