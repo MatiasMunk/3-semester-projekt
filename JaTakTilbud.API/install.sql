@@ -93,7 +93,7 @@ CREATE TABLE ProductPrices (
     productId_FK INT NOT NULL,
     FOREIGN KEY (productId_FK) REFERENCES Products(Id),
 
-    amount DECIMAL(10,2) NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
     validFrom DATETIME2 NOT NULL,
     validTo DATETIME2 NULL
 );
@@ -128,7 +128,7 @@ CREATE TABLE CampaignProducts (
     FOREIGN KEY (campaignId_FK) REFERENCES Campaigns(Id),
     FOREIGN KEY (productId_FK) REFERENCES Products(Id),
 
-    offerPrice DECIMAL(10,2) NOT NULL,
+    offerPrice DECIMAL(18,2) NOT NULL,
     quantity INT NOT NULL,
     reservedQuantity INT NOT NULL DEFAULT 0,
 	imageBlob VARBINARY(MAX) NULL
