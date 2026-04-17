@@ -80,7 +80,7 @@ CREATE TABLE Products (
 
     name NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
-	imageBlob VARBINARY(MAX) NULL
+	imageBlob VARBINARY(MAX) NULL,
     isActive BIT NOT NULL DEFAULT 1
 );
 
