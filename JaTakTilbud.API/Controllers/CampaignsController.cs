@@ -156,7 +156,8 @@ public class CampaignsController(ICampaignService campaignService) : ControllerB
             id,
             request.ProductId,
             request.CampaignPrice,
-            request.Quantity
+            request.Quantity,
+            request.ImageBlob
         );
 
         if (result.IsFailure)

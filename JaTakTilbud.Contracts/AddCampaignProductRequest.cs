@@ -7,4 +7,6 @@ public class AddCampaignProductRequest
     public decimal CampaignPrice { get; set; }
 
     public int Quantity { get; set; }
+
+    public byte[]? ImageBlob { get; set; }
 }

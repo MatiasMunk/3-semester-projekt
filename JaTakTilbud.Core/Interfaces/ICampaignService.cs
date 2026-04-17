@@ -37,7 +37,8 @@ public interface ICampaignService
         int campaignId,
         int productId,
         decimal offerPrice,
-        int quantity
+        int quantity,
+        byte[]? imageBlob = null
     );
 
     // -----------------------------

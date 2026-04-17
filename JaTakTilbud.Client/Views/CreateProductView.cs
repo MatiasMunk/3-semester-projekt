@@ -292,7 +292,7 @@ public partial class CreateProductView : UserControl
                 Name = txtName.TextValue.Trim(),
                 Description = txtDescription.TextValue.Trim(),
                 Price = txtPrice.NumericValue ?? 0,
-                ImageBytes = _imageBytes
+                ImageBlob = _imageBytes
             };
 
             if (string.IsNullOrWhiteSpace(request.Name))

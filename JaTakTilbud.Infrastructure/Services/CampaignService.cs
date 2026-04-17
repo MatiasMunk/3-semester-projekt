@@ -15,12 +15,12 @@ public class CampaignService : ICampaignService
         _factory = factory;
     }
 
-    // -----------------------------
+    // =========================================================
     // GET ALL (without products)
-    // -----------------------------
+    // =========================================================
     public async Task<Result<IEnumerable<Campaign>>> GetAllAsync()
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var campaigns = await conn.QueryAsync<Campaign>(@"
             SELECT
@@ -37,12 +37,12 @@ public class CampaignService : ICampaignService
         return Result<IEnumerable<Campaign>>.Success(campaigns);
     }
 
-    // -----------------------------
-    // GET BY ID (WITH PRODUCTS)
-    // -----------------------------
+    // =========================================================
+    // GET BY ID (WITH PRODUCTS + CORRECT PRICE)
+    // =========================================================
     public async Task<Result<Campaign>> GetByIdAsync(int id)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var sql = @"
             SELECT 
@@ -64,11 +64,14 @@ public class CampaignService : ICampaignService
                 p.Id,
                 p.name        AS Name,
                 p.description AS Description,
-                p.normalPrice AS Price
+                ISNULL(pp.amount, 0) AS Price
 
             FROM Campaigns c
             LEFT JOIN CampaignProducts cp ON cp.campaignId_FK = c.Id
             LEFT JOIN Products p ON p.Id = cp.productId_FK
+            LEFT JOIN ProductPrices pp 
+                ON pp.productId_FK = p.Id
+                AND pp.validTo IS NULL
             WHERE c.Id = @Id
         ";
 
@@ -85,7 +88,7 @@ public class CampaignService : ICampaignService
                     campaignDict.Add(existing.Id, existing);
                 }
 
-                if (cp != null)
+                if (cp != null && product != null)
                 {
                     cp.Product = product;
                     existing.Products.Add(cp);
@@ -105,22 +108,24 @@ public class CampaignService : ICampaignService
         return Result<Campaign>.Success(campaignResult);
     }
 
-    // -----------------------------
+    // =========================================================
     // CREATE
-    // -----------------------------
+    // =========================================================
     public async Task<Result<Campaign>> CreateAsync(Campaign campaign)
     {
         if (string.IsNullOrWhiteSpace(campaign.Title))
             return Result<Campaign>.Failure("Campaign title is required");
 
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         campaign.CreatedAt = DateTime.UtcNow;
         campaign.IsActive = true;
 
         var sql = @"
-            INSERT INTO Campaigns (title, description, createdAt, startTime, endTime, isActive)
-            VALUES (@Title, @Description, @CreatedAt, @StartTime, @EndTime, @IsActive);
+            INSERT INTO Campaigns 
+                (title, description, createdAt, startTime, endTime, isActive)
+            VALUES 
+                (@Title, @Description, @CreatedAt, @StartTime, @EndTime, @IsActive);
 
             SELECT CAST(SCOPE_IDENTITY() as int);
         ";
@@ -131,15 +136,15 @@ public class CampaignService : ICampaignService
         return Result<Campaign>.Success(campaign);
     }
 
-    // -----------------------------
+    // =========================================================
     // UPDATE
-    // -----------------------------
+    // =========================================================
     public async Task<Result> UpdateAsync(Campaign campaign)
     {
         if (string.IsNullOrWhiteSpace(campaign.Title))
             return Result.Failure("Campaign title is required");
 
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         var affected = await conn.ExecuteAsync(@"
             UPDATE Campaigns
@@ -158,12 +163,12 @@ public class CampaignService : ICampaignService
         return Result.Success();
     }
 
-    // -----------------------------
+    // =========================================================
     // DELETE
-    // -----------------------------
+    // =========================================================
     public async Task<Result> DeleteAsync(int id)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         await conn.ExecuteAsync(@"
             DELETE FROM CampaignProducts 
@@ -181,13 +186,19 @@ public class CampaignService : ICampaignService
         return Result.Success();
     }
 
-    // -----------------------------
-    // ADD PRODUCT TO CAMPAIGN
-    // -----------------------------
-    public async Task<Result> AddProductAsync(int campaignId, int productId, decimal offerPrice, int quantity)
+    // =========================================================
+    // ADD PRODUCT TO CAMPAIGN (FULL INSERT)
+    // =========================================================
+    public async Task<Result> AddProductAsync(
+        int campaignId,
+        int productId,
+        decimal offerPrice,
+        int quantity,
+        byte[]? imageBlob = null)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
+        // Prevent duplicates
         var exists = await conn.QueryFirstOrDefaultAsync<int>(@"
             SELECT 1 
             FROM CampaignProducts 
@@ -199,20 +210,42 @@ public class CampaignService : ICampaignService
 
         await conn.ExecuteAsync(@"
             INSERT INTO CampaignProducts 
-                (offerPrice, quantity, campaignId_FK, productId_FK)
+            (
+                campaignId_FK,
+                productId_FK,
+                offerPrice,
+                quantity,
+                reservedQuantity,
+                imageBlob
+            )
             VALUES 
-                (@offerPrice, @quantity, @campaignId, @productId)
-        ", new { campaignId, productId, offerPrice, quantity });
+            (
+                @campaignId,
+                @productId,
+                @offerPrice,
+                @quantity,
+                @reservedQuantity,
+                @imageBlob
+            )
+        ", new
+        {
+            campaignId,
+            productId,
+            offerPrice,
+            quantity,
+            reservedQuantity = 0,
+            imageBlob
+        });
 
         return Result.Success();
     }
 
-    // -----------------------------
+    // =========================================================
     // REMOVE PRODUCT FROM CAMPAIGN
-    // -----------------------------
+    // =========================================================
     public async Task<Result> RemoveProductAsync(int campaignId, int productId)
     {
-        using var conn = _factory.Create();
+        using var conn = await _factory.CreateOpenAsync();
 
         await conn.ExecuteAsync(@"
             DELETE FROM CampaignProducts

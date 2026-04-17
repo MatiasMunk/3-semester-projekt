@@ -25,6 +25,6 @@ internal static class Program
         // =========================================================
         // START APP WITH DEPENDENCIES
         // =========================================================
-        Application.Run(new MainForm(productApi));
+        Application.Run(new MainForm(productApi, campaignApi));
     }
 }

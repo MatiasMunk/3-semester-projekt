@@ -17,13 +17,15 @@ public partial class MainForm : Form
 
     // API dependencies
     private readonly IProductApi _productApi;
+    private readonly ICampaignApi _campaignApi;
 
-    public MainForm(IProductApi productApi)
+    public MainForm(IProductApi productApi, ICampaignApi campaignApi)
     {
         InitializeComponent();
         InitializeLayout();
 
         _productApi = productApi;
+        _campaignApi = campaignApi;
 
         BackColor = Theme.Background;
         contentPanel.BackColor = Theme.Background;
@@ -99,7 +101,7 @@ public partial class MainForm : Form
 
             "CreateProduct" => new CreateProductView(_productApi),
 
-            "CreateCampaignProduct" => new CreateCampaignProductView(_productApi),
+            "CreateCampaignProduct" => new CreateCampaignProductView(_productApi, _campaignApi),
 
             _ => new DashboardView()
         };

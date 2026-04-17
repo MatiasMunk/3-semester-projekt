@@ -9,24 +9,34 @@ namespace JaTakTilbud.Client.Views;
 public partial class CreateCampaignProductView : UserControl
 {
     // =========================================================
-    // FIELDS
+    // DEPENDENCIES
     // =========================================================
     private readonly IProductApi _productApi;
+    private readonly ICampaignApi _campaignApi;
 
+    // =========================================================
+    // STATE
+    // =========================================================
     private Product? selectedProduct;
+
     private PictureBox? previewImage;
     private Label? lblDiscountBadge;
     private Label? errOffer;
 
     private ComboBox cmbProduct = null!;
 
-    public CreateCampaignProductView(IProductApi productApi)
+    // NEW: override image (campaign-specific)
+    private Image? overrideImage;
+
+    public CreateCampaignProductView(IProductApi productApi, ICampaignApi campaignApi)
     {
         InitializeComponent();
         _productApi = productApi;
+        _campaignApi = campaignApi;
 
         BuildUI();
         LoadProducts();
+        LoadCampaigns();
 
         txtOfferPrice.TextChanged += OnInputChanged;
         txtQuantity.TextChanged += OnInputChanged;
@@ -40,7 +50,7 @@ public partial class CreateCampaignProductView : UserControl
     }
 
     // =========================================================
-    // LOAD PRODUCTS (FIXED ONLY)
+    // LOAD PRODUCTS
     // =========================================================
     private async void LoadProducts()
     {
@@ -61,14 +71,7 @@ public partial class CreateCampaignProductView : UserControl
             cmbProduct.SelectedIndex = 0;
 
             if (cmbProduct.SelectedItem is ProductDto dto)
-            {
-                selectedProduct = new Product
-                {
-                    Id = dto.Id,
-                    Name = dto.Name,
-                    Price = dto.Price
-                };
-            }
+                selectedProduct = MapToDomain(dto);
 
             UpdatePreview(null, EventArgs.Empty);
         }
@@ -78,15 +81,27 @@ public partial class CreateCampaignProductView : UserControl
             if (cmbProduct.SelectedItem is not ProductDto dto)
                 return;
 
-            selectedProduct = new Product
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Price = dto.Price
-            };
-
+            selectedProduct = MapToDomain(dto);
             UpdatePreview(null, EventArgs.Empty);
         };
+    }
+
+    // =========================================================
+    // LOAD CAMPAIGNS (FIXED: no hardcoded items anymore)
+    // =========================================================
+    private async void LoadCampaigns()
+    {
+        var campaigns = await _campaignApi.GetCampaigns();
+
+        if (campaigns == null || campaigns.Count == 0)
+        {
+            MessageBox.Show("No campaigns found. Create one first.");
+            return;
+        }
+
+        cmbCampaign.DataSource = campaigns;
+        cmbCampaign.DisplayMember = nameof(CampaignDto.Title);
+        cmbCampaign.ValueMember = nameof(CampaignDto.Id);
     }
 
     // =========================================================
@@ -138,6 +153,19 @@ public partial class CreateCampaignProductView : UserControl
         root.Controls.Add(right, 1, 0);
 
         Controls.Add(root);
+    }
+
+    // =========================================================
+    // DOMAIN MAPPING
+    // =========================================================
+    private static Product MapToDomain(ProductDto dto)
+    {
+        return new Product
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Price = dto.Price
+        };
     }
 
     // =========================================================
@@ -197,15 +225,6 @@ public partial class CreateCampaignProductView : UserControl
         cmbCampaign.Left = 10;
         cmbCampaign.Top = 40;
 
-        cmbCampaign.Items.Clear();
-        cmbCampaign.Items.AddRange(new object[]
-        {
-            "Uge 15 Tilbud",
-            "Weekend Kampagne",
-            "Sommer Deals"
-        });
-        cmbCampaign.SelectedIndex = 0;
-
         card.Controls.Add(title);
         card.Controls.Add(cmbCampaign);
 
@@ -213,7 +232,7 @@ public partial class CreateCampaignProductView : UserControl
     }
 
     // =========================================================
-    // PRODUCT CARD (FIXED CAST REMOVED)
+    // PRODUCT CARD
     // =========================================================
     private CardPanel CreateProductCard()
     {
@@ -240,8 +259,8 @@ public partial class CreateCampaignProductView : UserControl
 
         imageBox.ImageChanged += (img) =>
         {
-            if (previewImage != null)
-                previewImage.Image = img;
+            overrideImage = img;
+            UpdatePreview(null, EventArgs.Empty);
         };
 
         layout.Controls.Add(imageBox, 0, 0);
@@ -364,29 +383,32 @@ public partial class CreateCampaignProductView : UserControl
     }
 
     // =========================================================
-    // PREVIEW
+    // PREVIEW (FIXED LAYOUT)
     // =========================================================
     private CardPanel CreatePreviewCard()
     {
         var card = new CardPanel { Dock = DockStyle.Fill, BackColor = Color.White };
 
-        var title = new Label
-        {
-            Text = "LIVE PREVIEW",
-            Dock = DockStyle.Top
-        };
-
         var layout = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            ColumnCount = 2,
+            RowCount = 2,
             Padding = new Padding(20)
         };
 
-        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140));
-        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-        var wrapper = new Panel { Width = 120, Height = 120 };
+        var stack = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            FlowDirection = FlowDirection.TopDown,
+            AutoSize = true
+        };
+
+        stack.Controls.Add(lblPreviewTitle);
+        stack.Controls.Add(lblPreviewPrice);
+        stack.Controls.Add(lblPreviewSavings);
 
         previewImage = new PictureBox
         {
@@ -395,32 +417,10 @@ public partial class CreateCampaignProductView : UserControl
             BackColor = Color.LightGray
         };
 
-        var badge = new Label
-        {
-            BackColor = Color.Red,
-            ForeColor = Color.White,
-            Padding = new Padding(6, 2, 6, 2),
-            Location = new Point(70, 5),
-            Visible = false
-        };
-
-        lblDiscountBadge = badge;
-
-        wrapper.Controls.Add(previewImage);
-        wrapper.Controls.Add(badge);
-
-        layout.Controls.Add(wrapper, 0, 0);
-
-        var stack = new FlowLayoutPanel { Dock = DockStyle.Fill };
-
-        stack.Controls.Add(lblPreviewTitle);
-        stack.Controls.Add(lblPreviewPrice);
-        stack.Controls.Add(lblPreviewSavings);
-
-        layout.Controls.Add(stack, 1, 0);
+        layout.Controls.Add(stack, 0, 0);
+        layout.Controls.Add(previewImage, 0, 1);
 
         card.Controls.Add(layout);
-        card.Controls.Add(title);
 
         return card;
     }
@@ -435,19 +435,85 @@ public partial class CreateCampaignProductView : UserControl
         btnSave = new ModernButton { Text = "Gem kladde", Width = 140 };
         btnPublish = new ModernButton { Text = "Publicer", Width = 160, Left = 160 };
 
+        btnPublish.Click += async (_, _) => await PublishAsync();
+
         panel.Controls.Add(btnSave);
         panel.Controls.Add(btnPublish);
 
         return panel;
     }
 
+    private async Task PublishAsync()
+    {
+        if (!ValidateForm())
+        {
+            MessageBox.Show("Fix validation errors first.");
+            return;
+        }
+
+        if (cmbCampaign.SelectedItem is not CampaignDto campaign)
+        {
+            MessageBox.Show("Select a campaign.");
+            return;
+        }
+
+        if (selectedProduct == null)
+        {
+            MessageBox.Show("Select a product.");
+            return;
+        }
+
+        var offer = txtOfferPrice.NumericValue!.Value;
+        var quantity = (int)txtQuantity.NumericValue!.Value;
+
+        try
+        {
+            byte[]? imageBytes = null;
+
+            if (previewImage?.Image != null)
+            {
+                using var ms = new MemoryStream();
+                previewImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                imageBytes = ms.ToArray();
+            }
+
+            var request = new AddCampaignProductRequest
+            {
+                ProductId = selectedProduct.Id,
+                CampaignPrice = offer,
+                Quantity = quantity,
+                ImageBlob = imageBytes
+            };
+
+            await _campaignApi.AddProductAsync(campaign.Id, request);
+
+            MessageBox.Show("Product added to campaign!");
+
+            ClearForm();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error: {ex.Message}");
+        }
+    }
+
+    private void ClearForm()
+    {
+        txtOfferPrice.TextValue = "";
+        txtQuantity.TextValue = "";
+        txtMaxPerCustomer.TextValue = "";
+    }
+
     // =========================================================
-    // PREVIEW LOGIC (FIXED DIVISION)
+    // PREVIEW LOGIC
     // =========================================================
     private void UpdatePreview(object? sender, EventArgs e)
     {
         if (selectedProduct != null)
             lblPreviewTitle.Text = selectedProduct.Name;
+
+        if (overrideImage != null && previewImage != null)
+            previewImage.Image = overrideImage;
 
         var offer = txtOfferPrice.NumericValue;
 

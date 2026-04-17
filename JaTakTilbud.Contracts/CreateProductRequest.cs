@@ -11,5 +11,5 @@ public class CreateProductRequest
 
     public decimal Price { get; set; }
 
-    public byte[]? ImageBytes { get; set; }
+    public byte[]? ImageBlob { get; set; }
 }
