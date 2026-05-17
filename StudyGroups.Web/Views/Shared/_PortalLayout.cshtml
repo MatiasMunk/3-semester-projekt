@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Portal</title>
+
+    <style>
+            body {
+                margin: 0;
+                font-family: "Segoe UI", "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+            }
+
+            .app {
+                display: flex;
+                height: 100vh;
+            }
+
+            /* SIDEBAR */
+            .sidebar {
+                width: 220px;
+                background: #1e1e2f;
+                color: white;
+            }
+
+                .sidebar h2 {
+                    padding: 20px;
+                }
+
+                .sidebar a {
+                    display: block;
+                    padding: 12px 20px;
+                    color: #ccc;
+                    text-decoration: none;
+                }
+
+                    .sidebar a:hover {
+                        background: #2a2a40;
+                        color: white;
+                    }
+
+            /* MAIN */
+            .main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .topbar {
+                height: 60px;
+                background: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 20px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            /* AUTH MODAL */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(4px);
+                z-index: 999;
+
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* MODAL BOX */
+            .modal-box {
+                position: relative;
+                width: 360px;
+                padding: 30px;
+                background: white;
+                border-radius: 14px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+                text-align: center;
+                animation: fadeIn 0.25s ease;
+            }
+
+                /* TITLE */
+                .modal-box h3 {
+                    margin-bottom: 20px;
+                    font-size: 22px;
+                }
+
+                /* INPUTS */
+                .modal-box input {
+                    width: 100%;
+                    margin-bottom: 12px;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    font-size: 14px;
+                    transition: 0.2s;
+                }
+
+                    .modal-box input:focus {
+                        border-color: #4f46e5;
+                        outline: none;
+                        box-shadow: 0 0 0 2px rgba(79,70,229,0.15);
+                    }
+
+                /* BUTTON */
+                .modal-box button {
+                    width: 100%;
+                    padding: 10px;
+                    margin-top: 5px;
+                    border: none;
+                    border-radius: 8px;
+                    background: #4f46e5;
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: 0.2s;
+                }
+
+                    .modal-box button:hover {
+                        background: #4338ca;
+                    }
+
+            /* CLOSE BUTTON */
+            .modal-close {
+                position: absolute;
+                top: 12px;
+                right: 15px;
+                cursor: pointer;
+                font-size: 18px;
+                color: #888;
+                transition: 0.2s;
+            }
+
+            .modal-close:hover {
+                color: black;
+            }
+
+            /* TOGGLE LINK */
+            .modal-box a {
+                color: #4f46e5;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+            .modal-box a:hover {
+                text-decoration: underline;
+            }
+
+            /* ANIMATION */
+            @@keyframes fadeIn {
+                from {
+                    transform: translateY(-10px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h2>Portal</h2>
+
+            <a href="/Sessions">Sessions</a>
+            <a href="/Sessions/Create">Create</a>
+            <a href="/">← Back to Landing</a>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <div class="topbar">
+                <div>Study Portal</div>
+                <div>@ViewBag.Name</div>
+            </div>
+
+            <div class="content">
+                @RenderBody()
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="modal-overlay">
+
+        <div class="modal-box">
+
+            <!-- CLOSE -->
+            <span class="modal-close" onclick="closeModal()">×</span>
+
+            <!-- TITLE -->
+            <h3 id="modalTitle">Login</h3>
+
+            <!-- INPUTS -->
+            <input id="authUser" placeholder="Username" />
+            <input id="authPass" type="password" placeholder="Password" />
+
+            <!-- REGISTER ONLY -->
+            <input id="authEmail" placeholder="Email (register only)" style="display:none;" />
+
+            <!-- BUTTON -->
+            <button id="authSubmit" onclick="submitAuth()">Login</button>
+
+            <pre id="authMessage" style="display:none; margin-top:12px; padding:10px; background:#111; color:#0f0; white-space:pre-wrap;"></pre>
+
+            <!-- TOGGLE -->
+            <p style="margin-top:10px;">
+                <span id="toggleText">Don't have an account?</span>
+                <a href="#" onclick="toggleMode()" id="toggleTextBtn">Register</a>
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+            let isLoginMode = true;
+
+            // -----------------------------
+            // OPEN / CLOSE
+            // -----------------------------
+            function openModal() {
+                const modal = document.getElementById("authModal");
+                modal.style.display = "flex"; // sikrer centrering
+            }
+
+            function closeModal() {
+                document.getElementById("authModal").style.display = "none";
+            }
+
+            // -----------------------------
+            // TOGGLE MODE
+            // -----------------------------
+            function toggleMode() {
+                isLoginMode = !isLoginMode;
+                const msg = document.getElementById("authMessage");
+                msg.style.display = "none";
+                msg.innerText = "";
+
+                document.getElementById("modalTitle").innerText =
+                    isLoginMode ? "Login" : "Register";
+
+                document.getElementById("authSubmit").innerText =
+                    isLoginMode ? "Login" : "Register";
+
+                document.getElementById("authEmail").style.display =
+                    isLoginMode ? "none" : "block";
+
+                document.getElementById("toggleText").innerText =
+                    isLoginMode ? "Don't have an account?" : "Already have an account?";
+
+                document.getElementById("toggleTextBtn").innerText =
+                    isLoginMode ? "Register" : "Login";
+            }
+
+            // -----------------------------
+            // SUBMIT AUTH
+            // -----------------------------
+            async function submitAuth() {
+
+                const username = document.getElementById("authUser").value;
+                const password = document.getElementById("authPass").value;
+                const email = document.getElementById("authEmail").value;
+                const msg = document.getElementById("authMessage");
+
+                msg.style.display = "block";
+                msg.style.color = "#0f0";
+                msg.innerText = `Submitting ${isLoginMode ? "login" : "register"}...
+Username='${username}'
+PasswordLength=${password.length}`;
+
+                const endpoint = isLoginMode ? "/Account/Login" : "/Account/Register";
+
+                const form = new URLSearchParams();
+                form.append("Username", username);
+                form.append("Password", password);
+                if (!isLoginMode) {
+                    form.append("Email", email);
+                }
+
+                try {
+                    const res = await fetch(endpoint, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: form.toString()
+                    });
+
+                    const contentType = res.headers.get("content-type") || "";
+                    const body = contentType.includes("application/json")
+                        ? JSON.stringify(await res.json(), null, 2)
+                        : await res.text();
+
+                    if (res.ok) {
+                        msg.style.color = "#0f0";
+                        msg.innerText = `SUCCESS ${res.status}
+${body}`;
+
+                        if (isLoginMode) {
+                            setTimeout(() => location.reload(), 700);
+                        }
+                    } else {
+                        msg.style.color = "#ff6b6b";
+                        msg.innerText = `ERROR ${res.status}
+${body}`;
+                    }
+                } catch (e) {
+                    msg.style.color = "#ff6b6b";
+                    msg.innerText = `FETCH ERROR
+${e}`;
+                }
+            }
+
+            // -----------------------------
+            // JOIN SESSION
+            // -----------------------------
+            async function joinSession(sessionId) {
+                try {
+                    const res = await fetch('/Account/IsLoggedIn');
+                    const isLoggedIn = await res.json();
+
+                    if (!isLoggedIn) {
+                        openModal();
+                    } else {
+                        window.location = "/Sessions/Join/" + sessionId;
+                    }
+                } catch (e) {
+                    console.error("Join error:", e);
+                }
+            }
+
+            // -----------------------------
+            // ESC CLOSE
+            // -----------------------------
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    closeModal();
+                }
+            });
+
+            // -----------------------------
+            // OUTSIDE CLICK CLOSE
+            // -----------------------------
+            window.onclick = function (event) {
+                const modal = document.getElementById("authModal");
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+    </script>
+
+</body>
+</html>

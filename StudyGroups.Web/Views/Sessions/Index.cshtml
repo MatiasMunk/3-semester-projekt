@@ -1,0 +1,194 @@
+﻿@{
+    Layout = "_PortalLayout";
+}
+
+@model IEnumerable<StudyGroups.Contracts.StudySessionDto>
+
+<style>
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+        .page-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+    .sessions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .session-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 4px 24px rgba(15,23,42,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .session-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(15,23,42,0.15);
+    }
+
+    .session-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .session-meta {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .session-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+    }
+
+    .badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-open {
+        background: rgba(34,197,94,0.15);
+        color: #22c55e;
+    }
+
+    .badge-few {
+        background: rgba(245,158,11,0.15);
+        color: #f59e0b;
+    }
+
+    .badge-full {
+        background: rgba(239,68,68,0.15);
+        color: #ef4444;
+    }
+
+    .session-actions {
+        margin-top: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .join-btn {
+        background: #4338ca;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .join-btn:hover {
+        background: #3730a3;
+    }
+
+    .join-btn.secondary {
+        background: #0f172a;
+    }
+
+    .join-btn.secondary:hover {
+        background: #1e293b;
+    }
+</style>
+
+<div class="container">
+
+    <div class="page-header">
+        <h2>Study Sessions</h2>
+    </div>
+
+    <div class="sessions-grid">
+        @foreach (var s in Model)
+        {
+            var spotsLeft = s.MaxParticipants - s.CurrentParticipants;
+
+            string badgeClass = spotsLeft switch
+            {
+                <= 0 => "badge-full",
+                <= 2 => "badge-few",
+                _ => "badge-open"
+            };
+
+            string badgeText = spotsLeft switch
+            {
+                <= 0 => "Full",
+                <= 2 => $"{spotsLeft} spots left",
+                _ => $"{spotsLeft} spots"
+            };
+
+            <div class="session-card">
+                <div class="session-title">@s.Title</div>
+
+                <div class="session-meta">
+                    @s.TopicIcon @s.TopicName · @s.Location
+                </div>
+
+                <div class="session-row">
+                    <span>@s.StartTime.ToString("dd MMM HH:mm")</span>
+                    <span class="badge @badgeClass">@badgeText</span>
+                </div>
+
+                <div class="session-row">
+                    <span>@s.CurrentParticipants / @s.MaxParticipants participants</span>
+                </div>
+
+                <div class="session-actions">
+                    <button class="join-btn" onclick="joinSession(@s.Id)">
+                        Join session
+                    </button>
+                    <button class="join-btn secondary" onclick="enterRoom(@s.Id)">
+                        Enter room
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    function requireLogin(next) {
+        fetch('/Account/IsLoggedIn')
+            .then(r => r.json())
+            .then(isLoggedIn => {
+                if (!isLoggedIn) {
+                    document.getElementById("loginModal").style.display = "block";
+                } else {
+                    next();
+                }
+            });
+    }
+
+    function joinSession(sessionId) {
+        requireLogin(() => window.location = "/Sessions/Join/" + sessionId);
+    }
+
+    function enterRoom(sessionId) {
+        requireLogin(() => window.location = "/Sessions/Room/" + sessionId);
+    }
+</script>

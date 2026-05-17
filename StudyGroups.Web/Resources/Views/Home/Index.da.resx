@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter</value>
+	</resheader>
+
+	<!-- HERO -->
+	<data name="HeroBadge">
+		<value>Nu live – gratis at bruge</value>
+	</data>
+	<data name="HeroTitle">
+		<value>Studér smartere sammen</value>
+	</data>
+	<data name="HeroHighlight">
+		<value>smartere</value>
+	</data>
+	<data name="HeroSubtitle">
+		<value>Opret, deltag og samarbejd i studiesessioner på sekunder.</value>
+	</data>
+	<data name="HeroPrimaryBtn">
+		<value>Kom i gang →</value>
+	</data>
+	<data name="HeroSecondaryBtn">
+		<value>Se sessioner</value>
+	</data>
+	<data name="HeroUsers">
+		<value>+3.500 studerende bruger allerede platformen</value>
+	</data>
+
+	<!-- HERO VISUAL -->
+	<data name="HeroCardTitle">
+		<value>📚 Aktive sessioner</value>
+	</data>
+
+	<data name="Session1Title">
+		<value>Lineær Algebra – Gruppe B</value>
+	</data>
+	<data name="Session1Meta">
+		<value>I dag kl. 14:00 · Biblioteket</value>
+	</data>
+	<data name="Session1Spots">
+		<value>{0} ledige</value>
+	</data>
+
+	<data name="Session2Title">
+		<value>Python til eksamen</value>
+	</data>
+	<data name="Session2Meta">
+		<value>I dag kl. 16:30 · Online</value>
+	</data>
+	<data name="Session2Spots">
+		<value>{0} ledig</value>
+	</data>
+
+	<data name="Session3Title">
+		<value>Biokemi eksamensøvelse</value>
+	</data>
+	<data name="Session3Meta">
+		<value>I morgen kl. 10:00 · Lokale 204</value>
+	</data>
+	<data name="Session3Spots">
+		<value>{0} ledige</value>
+	</data>
+
+	<data name="HeroFloatingBadge">
+		<value>🔥 {0} nye sessioner i dag</value>
+	</data>
+
+	<!-- STATS -->
+	<data name="StatsSessions">
+		<value>Sessioner oprettet</value>
+	</data>
+	<data name="StatsStudents">
+		<value>Studerende tilmeldt</value>
+	</data>
+	<data name="StatsSubjects">
+		<value>Fag dækket</value>
+	</data>
+
+	<!-- SPLIT -->
+	<data name="SplitTag">
+		<value>Samarbejde</value>
+	</data>
+	<data name="SplitTitle">
+		<value>Samarbejd effektivt med andre</value>
+	</data>
+	<data name="SplitText">
+		<value>At studere alene kan være svært. Platformen forbinder dig med andre studerende, så du lærer hurtigere.</value>
+	</data>
+
+	<!-- SPLIT OVERLAY -->
+	<data name="SplitImageAlt">
+		<value>Studerende der samarbejder</value>
+	</data>
+	<data name="SplitOverlayTitle">
+		<value>Fokuseret læring</value>
+	</data>
+	<data name="SplitOverlayText">
+		<value>Studér med struktur og mål</value>
+	</data>
+
+	<data name="Feature1">
+		<value>Find sessioner tæt på dig eller online</value>
+	</data>
+	<data name="Feature2">
+		<value>Se ledige pladser i realtid</value>
+	</data>
+	<data name="Feature3">
+		<value>Opret din egen session på under et minut</value>
+	</data>
+	<data name="Feature4">
+		<value>Helt gratis at bruge</value>
+	</data>
+
+	<!-- HOW -->
+	<data name="HowTag">
+		<value>Sådan virker det</value>
+	</data>
+	<data name="HowTitle">
+		<value>Fra idé til studiegruppe</value>
+	</data>
+	<data name="HowTitleHighlight">
+		<value>på tre trin</value>
+	</data>
+
+	<!-- STEP 1 -->
+	<data name="Step1Title">
+		<value>Opret session</value>
+	</data>
+	<data name="Step1Desc">
+		<value>Start en studiesession på få sekunder</value>
+	</data>
+	<data name="Step1DescDetailed">
+		<value>Vælg fag, tidspunkt og sted. Sæt deltagergrænser.</value>
+	</data>
+
+	<data name="Step1Item1">
+		<value>Vælg emne</value>
+	</data>
+	<data name="Step1Item2">
+		<value>Dato &amp; tidspunkt</value>
+	</data>
+	<data name="Step1Item3">
+		<value>Max deltagere</value>
+	</data>
+
+	<!-- STEP 2 -->
+	<data name="Step2Title">
+		<value>Invitér &amp; deltag</value>
+	</data>
+	<data name="Step2Desc">
+		<value>Forbind med andre studerende og deltag i eksisterende sessioner</value>
+	</data>
+	<data name="Step2DescDetailed">
+		<value>Gennemse sessioner eller tilmeld dig med det samme.</value>
+	</data>
+
+	<data name="Step2Item1">
+		<value>Live tilgængelighed</value>
+	</data>
+	<data name="Step2Item2">
+		<value>Øjeblikkelig tilmelding</value>
+	</data>
+	<data name="Step2Item3">
+		<value>Ingen konflikter</value>
+	</data>
+
+	<!-- STEP 3 -->
+	<data name="Step3Title">
+		<value>Studér sammen</value>
+	</data>
+	<data name="Step3Desc">
+		<value>Mød op fysisk eller online og nå jeres læringsmål</value>
+	</data>
+	<data name="Step3DescDetailed">
+		<value>Mød fysisk eller online. Hold styr på deltagerne.</value>
+	</data>
+
+	<data name="Step3Item1">
+		<value>Fælles fokus</value>
+	</data>
+	<data name="Step3Item2">
+		<value>Bedre motivation</value>
+	</data>
+	<data name="Step3Item3">
+		<value>Højere succesrate</value>
+	</data>
+
+	<!-- SLIDER -->
+	<data name="CategoriesTag">
+		<value>Kategorier</value>
+	</data>
+	<data name="CategoriesTitle">
+		<value>Populære emner</value>
+	</data>
+
+	<data name="CatGroup">
+		<value>Gruppestudie</value>
+	</data>
+	<data name="CatProgramming">
+		<value>Programmering</value>
+	</data>
+	<data name="CatMath">
+		<value>Matematik</value>
+	</data>
+	<data name="CatExam">
+		<value>Eksamensforberedelse</value>
+	</data>
+	<data name="CatScience">
+		<value>Naturvidenskab</value>
+	</data>
+	<data name="CatLanguage">
+		<value>Sprog</value>
+	</data>
+	<data name="CatBusiness">
+		<value>Økonomi</value>
+	</data>
+	<data name="CatDesign">
+		<value>Design</value>
+	</data>
+
+	<!-- TESTIMONIALS -->
+	<data name="TestimonialsTag">
+		<value>Anmeldelser</value>
+	</data>
+	<data name="TestimonialsTitle">
+		<value>Hvad studerende siger</value>
+	</data>
+
+	<data name="Testimonial1Text">
+		<value>Hjalp mig med at bestå mine eksamener! Jeg fandt en studiegruppe til statistik og vi mødtes tre gange om ugen. Utrolig platform.</value>
+	</data>
+	<data name="Testimonial1Name">
+		<value>Anna K.</value>
+	</data>
+	<data name="Testimonial1Role">
+		<value>Datalogistuderende</value>
+	</data>
+
+	<data name="Testimonial2Text">
+		<value>Langt bedre end at studere alene. Jeg fandt folk med de samme mål, og vi holdt hinanden ansvarlige. Varmt anbefalet!</value>
+	</data>
+	<data name="Testimonial2Name">
+		<value>Jonas M.</value>
+	</data>
+	<data name="Testimonial2Role">
+		<value>Maskiningeniørstuderende</value>
+	</data>
+
+	<data name="Testimonial3Text">
+		<value>Super nemt at bruge. Oprettede en session og havde tre tilmeldte inden for ti minutter. Fantastisk til eksamensperioden.</value>
+	</data>
+	<data name="Testimonial3Name">
+		<value>Maria L.</value>
+	</data>
+	<data name="Testimonial3Role">
+		<value>Medicinstuderende</value>
+	</data>
+
+	<!-- CTA -->
+	<data name="CtaTitle">
+		<value>Klar til at studere smartere?</value>
+	</data>
+	<data name="CtaText">
+		<value>Bliv en del af tusindvis af studerende.</value>
+	</data>
+	<data name="CtaButton">
+		<value>Start nu →</value>
+	</data>
+	<data name="CtaNote">
+		<value>Gratis · Ingen tilmelding nødvendig</value>
+	</data>
+
+	<!-- FOOTER -->
+	<data name="FooterHome">
+		<value>Hjem</value>
+	</data>
+	<data name="FooterSessions">
+		<value>Sessioner</value>
+	</data>
+	<data name="FooterAbout">
+		<value>Om os</value>
+	</data>
+	<data name="FooterCopy">
+		<value>© 2026 Study Groups. Alle rettigheder forbeholdes.</value>
+	</data>
+
+</root>

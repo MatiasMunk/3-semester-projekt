@@ -1,0 +1,40 @@
+﻿@model StudyGroups.Contracts.RegisterRequest
+
+@{
+    Layout = "_PortalLayout";
+}
+
+<h2>Register</h2>
+
+@if (ViewBag.RegisterSucceeded == true)
+{
+    <div style="padding: 12px; margin-bottom: 12px; background: #ddffdd; border: 1px solid #55aa55; color: #064d06;">
+        Register API returned success. Check the Users table now.
+    </div>
+}
+
+@if (ViewBag.Debug != null)
+{
+    <pre style="padding: 12px; margin-bottom: 12px; background: #111; color: #0f0; white-space: pre-wrap;">@ViewBag.Debug</pre>
+}
+
+<form asp-controller="Account" asp-action="Register" method="post">
+
+    <div asp-validation-summary="All" style="color:red;"></div>
+
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" autocomplete="username" />
+        <span asp-validation-for="Username" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" autocomplete="new-password" />
+        <span asp-validation-for="Password" style="color:red;"></span>
+    </div>
+
+    <button type="submit">Register</button>
+</form>
+
+<a href="/Account/Login">Already have account?</a>

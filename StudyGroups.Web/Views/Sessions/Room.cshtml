@@ -1,0 +1,369 @@
+﻿@{
+    Layout = "_PortalLayout";
+}
+
+@model StudyGroups.Contracts.StudySessionDto
+
+<style>
+    .room-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 560px;
+        gap: 18px;
+        height: calc(100vh - 120px);
+    }
+
+    .room-main, .room-side {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(15,23,42,0.08);
+        padding: 16px;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .room-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .room-title { font-size: 24px; font-weight: 700; }
+    .room-meta { color: #64748b; font-size: 14px; margin-top: 4px; }
+
+    .room-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .room-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 700;
+        cursor: pointer;
+        background: #4338ca;
+        color: white;
+    }
+
+    .room-btn.secondary { background: #e2e8f0; color: #0f172a; }
+    .room-btn.danger { background: #ef4444; }
+    .room-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+        overflow: auto;
+        max-height: calc(100% - 78px);
+    }
+
+    .video-tile {
+        position: relative;
+        min-height: 190px;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #0f172a;
+        color: white;
+        cursor: pointer;
+    }
+
+    .video-tile video {
+        width: 100%;
+        height: 100%;
+        min-height: 190px;
+        object-fit: cover;
+        background: #0f172a;
+    }
+
+    .video-label {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(15,23,42,0.78);
+        font-size: 12px;
+    }
+
+    .room-side {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 12px;
+    }
+
+    .room-chat-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 190px;
+        gap: 12px;
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .chat-column {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 8px;
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .room-status {
+        padding: 10px;
+        border-radius: 10px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 13px;
+        white-space: pre-wrap;
+    }
+
+    .notification-bar {
+        display: none;
+        border: 1px solid #bfdbfe;
+        background: #eff6ff;
+        color: #1e3a8a;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 13px;
+        max-height: 110px;
+        overflow: auto;
+    }
+
+    .notification-bar.has-items { display: block; }
+    .notification-item { margin-bottom: 8px; }
+    .notification-item:last-child { margin-bottom: 0; }
+    .notification-link { border: 0; background: transparent; color: #4338ca; font-weight: 800; cursor: pointer; padding: 0; }
+    .notification-actions { display: inline-flex; gap: 6px; margin-left: 8px; }
+    .notification-action {
+        border: 0;
+        border-radius: 999px;
+        padding: 3px 8px;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+    .notification-action.accept { background: #dcfce7; color: #166534; }
+    .notification-action.ignore { background: #fee2e2; color: #991b1b; }
+
+    .room-users {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fafafa;
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+
+    .room-users-title {
+        padding: 8px 10px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 12px;
+        font-weight: 800;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+
+    .users-list { overflow: auto; min-height: 0; }
+    .user-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid #e2e8f0;
+        background: transparent;
+        padding: 9px 10px;
+        cursor: pointer;
+        text-align: left;
+    }
+    .user-row:hover { background: #eef2ff; }
+    .user-row:last-child { border-bottom: 0; }
+    .user-row-name { font-weight: 700; color: #0f172a; }
+    .user-row-status { font-size: 11px; color: #16a34a; }
+    .user-row.current { cursor: default; opacity: .75; }
+    .owner-badge {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 6px;
+        padding: 2px 6px;
+        border-radius: 999px;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+
+    .chat-log {
+        overflow: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 10px;
+        background: #fafafa;
+        min-height: min(620px, 70vh);
+        height: 100%;
+    }
+
+    @@media (max-width: 1180px) {
+        .room-shell { grid-template-columns: 1fr; height: auto; }
+        .room-side { min-height: calc(100vh - 120px); }
+        .room-chat-layout { min-height: 70vh; }
+    }
+
+    @@media (max-width: 720px) {
+        .room-chat-layout { grid-template-columns: 1fr; min-height: 78vh; }
+        .chat-log { min-height: 70vh; }
+        .room-users { min-height: 160px; }
+    }
+
+    .chat-line { margin-bottom: 8px; font-size: 14px; }
+    .chat-line strong { color: #4338ca; }
+    .chat-user { border: 0; padding: 0; background: transparent; color: #4338ca; font-weight: 800; cursor: pointer; }
+    .chat-user:hover { text-decoration: underline; }
+
+    .chat-form {
+        display: flex;
+        gap: 8px;
+    }
+
+    .chat-form input {
+        flex: 1;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .lk-warning {
+        padding: 12px;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
+
+    .user-popover, .pm-drawer {
+        position: fixed;
+        z-index: 1000;
+        background: white;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 12px 36px rgba(15,23,42,.18);
+    }
+
+    .user-popover {
+        min-width: 220px;
+        border-radius: 14px;
+        padding: 12px;
+        display: none;
+    }
+
+    .user-popover.open { display: block; }
+    .user-popover-name { font-weight: 800; margin-bottom: 4px; }
+    .user-popover-id { color: #64748b; font-size: 12px; margin-bottom: 10px; }
+    .user-popover-actions { display: grid; gap: 8px; }
+
+    .pm-drawer {
+        right: 18px;
+        bottom: 18px;
+        width: min(380px, calc(100vw - 36px));
+        height: min(560px, calc(100vh - 80px));
+        border-radius: 18px;
+        display: none;
+        grid-template-rows: auto 1fr auto;
+        overflow: hidden;
+    }
+
+    .pm-drawer.open { display: grid; }
+    .pm-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 14px; border-bottom: 1px solid #e2e8f0; }
+    .pm-title { font-weight: 800; }
+    .pm-log { overflow: auto; padding: 12px; background: #f8fafc; }
+    .pm-line { margin-bottom: 10px; max-width: 82%; padding: 8px 10px; border-radius: 12px; background: #e2e8f0; font-size: 14px; }
+    .pm-line.mine { margin-left: auto; background: #4338ca; color: white; }
+    .pm-time { display: block; opacity: .7; font-size: 11px; margin-top: 4px; }
+    .pm-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #e2e8f0; }
+    .pm-form input { flex: 1; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; }
+    .pm-close { border: 0; background: #e2e8f0; border-radius: 999px; width: 32px; height: 32px; cursor: pointer; }
+</style>
+
+<div class="room-shell"
+     data-session-id="@ViewBag.SessionId"
+     data-user-id="@ViewBag.UserId"
+     data-owner-user-id="@Model.CreatedByUserId"
+     data-display-name="@ViewBag.DisplayName">
+    <section class="room-main">
+        <div class="room-header">
+            <div>
+                <div class="room-title">@Model.Title</div>
+                <div class="room-meta">@Model.TopicIcon @Model.TopicName · @Model.Location · @Model.StartTime.ToString("dd MMM HH:mm")</div>
+            </div>
+            <div class="room-controls">
+                <button class="room-btn" id="connectRoomBtn">Connect room</button>
+                <button class="room-btn secondary" id="toggleCameraBtn" disabled>Camera on</button>
+                <button class="room-btn secondary" id="toggleMicBtn" disabled>Mic on</button>
+                <button class="room-btn danger" id="leaveRoomBtn" disabled>Leave</button>
+            </div>
+        </div>
+
+        @if (!(ViewBag.LiveKitConfigured as bool? ?? false))
+        {
+            <div class="lk-warning">
+                LiveKit is wired up, but not configured yet. Set LiveKit:Url, LiveKit:ApiKey and LiveKit:ApiSecret in appsettings.json or user secrets.
+            </div>
+        }
+
+        <div class="video-grid" id="videoGrid"></div>
+    </section>
+
+    <aside class="room-side">
+        <div class="room-status" id="roomStatus">Not connected.</div>
+        <div class="notification-bar" id="notificationBar"></div>
+
+        <div class="room-chat-layout">
+            <div class="chat-column">
+                <div class="chat-log" id="chatLog"></div>
+                <form class="chat-form" id="chatForm">
+                    <input id="chatInput" type="text" placeholder="Message #general..." autocomplete="off" />
+                    <button class="room-btn" type="submit">Send</button>
+                </form>
+            </div>
+
+            <section class="room-users">
+                <div class="room-users-title">Users in room</div>
+                <div class="users-list" id="usersList"></div>
+            </section>
+        </div>
+    </aside>
+</div>
+
+<div class="user-popover" id="userPopover" aria-live="polite">
+    <div class="user-popover-name" id="popoverName"></div>
+    <div class="user-popover-id" id="popoverMeta"></div>
+    <div class="user-popover-actions">
+        <button class="room-btn" id="popoverPmBtn" type="button">Send private message</button>
+        <button class="room-btn secondary" id="popoverFriendBtn" type="button">Add friend request</button>
+    </div>
+</div>
+
+<div class="pm-drawer" id="pmDrawer">
+    <div class="pm-header">
+        <div>
+            <div class="pm-title" id="pmTitle">Private message</div>
+            <div class="user-popover-id" id="pmMeta"></div>
+        </div>
+        <button class="pm-close" id="pmCloseBtn" type="button" aria-label="Close private messages">×</button>
+    </div>
+    <div class="pm-log" id="pmLog"></div>
+    <form class="pm-form" id="pmForm">
+        <input id="pmInput" type="text" placeholder="Write a private message..." autocomplete="off" />
+        <button class="room-btn" type="submit">Send</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+<script src="~/js/session-room.js" asp-append-version="true"></script>

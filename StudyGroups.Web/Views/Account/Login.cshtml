@@ -1,0 +1,26 @@
+﻿@model StudyGroups.Contracts.LoginRequest
+
+@{
+    Layout = "_PortalLayout";
+}
+
+<h2>Login</h2>
+
+<form asp-controller="Account" asp-action="Login" method="post">
+
+    <div asp-validation-summary="All" style="color:red;"></div>
+
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" />
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+
+<a href="/Account/Register">Create account</a>

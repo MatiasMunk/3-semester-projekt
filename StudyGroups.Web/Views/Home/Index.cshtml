@@ -1,0 +1,1161 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+
+@{
+    Layout = "_LandingLayout";
+    ViewData["Title"] = "Hjem";
+}
+
+<style>
+/* ─── TOKENS ──────────────────────────────────────────────────── */
+:root {
+    --navy:   #0f172a;
+    --navy2:  #1e293b;
+    --indigo: #4338ca;
+    --indigo2:#6366f1;
+    --amber:  #f59e0b;
+    --amber2: #fbbf24;
+    --cream:  #faf9f7;
+    --gray:   #64748b;
+    --light:  #f1f5f9;
+    --white:  #ffffff;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(15,23,42,0.10);
+    --shadow-lg: 0 16px 56px rgba(15,23,42,0.18);
+}
+
+/* ─── RESET ────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+
+/* ─── UTILITIES ────────────────────────────────────────────────── */
+.container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 60px);
+}
+
+.section { padding: clamp(60px, 8vw, 100px) 0; }
+
+.tag {
+    display: inline-block;
+    background: rgba(67,56,202,0.1);
+    color: var(--indigo);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--indigo);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #3730a3;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(67,56,202,0.35);
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px 27px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(15,23,42,0.18);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-outline:hover {
+    background: var(--light);
+    border-color: var(--navy);
+}
+
+/* ─── HERO ─────────────────────────────────────────────────────── */
+.hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: clamp(80px, 10vw, 140px) 0 clamp(60px, 8vw, 100px);
+}
+
+/* decorative blobs */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -120px;
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(99,102,241,0.35) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: clamp(40px, 6vw, 80px);
+}
+
+.hero-text { color: white; }
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--amber2);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+}
+
+.hero-badge::before {
+    content: '✦';
+    font-size: 10px;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5.5vw, 64px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+}
+
+.hero h1 em {
+    font-style: italic;
+    color: var(--amber2);
+}
+
+.hero-sub {
+    font-size: clamp(16px, 2vw, 19px);
+    color: rgba(255,255,255,0.72);
+    line-height: 1.65;
+    max-width: 480px;
+    margin-bottom: 36px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+}
+
+.hero-actions .btn-outline {
+    color: rgba(255,255,255,0.85);
+    border-color: rgba(255,255,255,0.25);
+}
+
+.hero-actions .btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.hero-proof {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+}
+
+.hero-avatars {
+    display: flex;
+}
+
+.hero-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--navy);
+    margin-left: -8px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+}
+
+.hero-avatars .hero-avatar:first-child { margin-left: 0; }
+
+.hero-visual {
+    position: relative;
+}
+
+.hero-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius);
+    padding: 28px;
+    backdrop-filter: blur(10px);
+}
+
+.hero-card-title {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.session-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.session-item:last-child { border-bottom: none; }
+
+.session-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.session-info { flex: 1; }
+
+.session-name {
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.session-meta {
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+}
+
+.session-spots {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.spots-open { background: rgba(34,197,94,0.15); color: #4ade80; }
+.spots-few  { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+.floating-badge {
+    position: absolute;
+    bottom: -18px;
+    right: -18px;
+    background: var(--amber);
+    color: var(--navy);
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ─── STATS ─────────────────────────────────────────────────────── */
+.stats-band {
+    background: white;
+    border-top: 1px solid rgba(15,23,42,0.07);
+    border-bottom: 1px solid rgba(15,23,42,0.07);
+    padding: 50px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.stat-divider {
+    border-left: 1px solid var(--light);
+}
+
+.stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 900;
+    color: var(--indigo);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: var(--gray);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ─── SPLIT ─────────────────────────────────────────────────────── */
+.split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+}
+
+.split-img-wrap {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.split-img-wrap img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+}
+
+.split-img-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.overlay-icon {
+    width: 40px; height: 40px;
+    background: var(--indigo);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.overlay-text { color: white; }
+.overlay-text strong { font-size: 14px; font-weight: 600; display: block; }
+.overlay-text span { font-size: 12px; color: rgba(255,255,255,0.55); }
+
+.split-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    margin-bottom: 18px;
+}
+
+.split-text p {
+    color: var(--gray);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+.feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--navy2);
+    font-weight: 500;
+}
+
+.feature-check {
+    width: 22px; height: 22px;
+    background: rgba(67,56,202,0.12);
+    color: var(--indigo);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ─── HOW IT WORKS ──────────────────────────────────────────────── */
+.how-section {
+    background: var(--navy);
+    padding: clamp(70px, 9vw, 110px) 0;
+}
+
+.section-header { text-align: center; margin-bottom: clamp(44px, 6vw, 64px); }
+
+.how-section .section-header .tag {
+    background: rgba(245,158,11,0.15);
+    color: var(--amber2);
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900;
+    letter-spacing: -0.8px;
+    line-height: 1.15;
+}
+
+.how-section .section-title { color: white; }
+
+.how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* flip cards */
+.step-card {
+    height: 260px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.step-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.65s cubic-bezier(.4,0,.2,1);
+    transform-style: preserve-3d;
+}
+
+.step-card:hover .step-inner { transform: rotateY(180deg); }
+
+.step-front, .step-back {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.step-front {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: rgba(245,158,11,0.4);
+    line-height: 1;
+}
+
+.step-front h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.step-front p {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.step-back {
+    background: var(--indigo);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.step-back h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+.step-back p {
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.step-back ul {
+    margin-top: 4px;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.step-back li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+}
+
+.step-back li::before {
+    content: '→';
+    color: var(--amber2);
+    font-weight: 700;
+}
+
+/* ─── CATEGORIES SLIDER ─────────────────────────────────────────── */
+.slider-section { padding: clamp(50px, 7vw, 80px) 0; background: white; }
+
+.slider-section .section-header { margin-bottom: 36px; }
+.slider-section .section-title { color: var(--navy); }
+
+.slider-wrapper {
+    overflow: hidden;
+    position: relative;
+    /* fade edges */
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.slider-track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+}
+
+.slide {
+    min-width: 200px;
+    height: 110px;
+    border-radius: var(--radius);
+    background: var(--light);
+    border: 1.5px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s, color 0.25s;
+}
+
+.slide-emoji {
+    font-size: 26px;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.slide:hover {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ─── TESTIMONIALS ──────────────────────────────────────────────── */
+.testimonial-section { background: var(--cream); }
+
+.testimonial-section .section-title { color: var(--navy); }
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.testimonial {
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(15,23,42,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.testimonial:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stars { color: var(--amber); font-size: 16px; letter-spacing: 1px; }
+
+.quote-text {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--navy2);
+    flex: 1;
+}
+
+.quote-author { display: flex; align-items: center; gap: 12px; }
+
+.author-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--navy);
+}
+
+.author-role {
+    font-size: 12px;
+    color: var(--gray);
+}
+
+/* ─── CTA ────────────────────────────────────────────────────────── */
+.cta-section { padding: clamp(60px, 8vw, 100px) 0; }
+
+.cta-box {
+    background: var(--navy);
+    border-radius: 24px;
+    padding: clamp(50px, 7vw, 80px) clamp(30px, 5vw, 80px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-box::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -80px;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cta-box::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 40%;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cta-content { position: relative; z-index: 1; }
+
+.cta-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 900;
+    color: white;
+    letter-spacing: -0.6px;
+    margin-bottom: 14px;
+}
+
+.cta-box p {
+    color: rgba(255,255,255,0.6);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.cta-actions { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+
+.btn-amber {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--amber);
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.btn-amber:hover { background: var(--amber2); transform: translateY(-2px); }
+
+.cta-note {
+    color: rgba(255,255,255,0.45);
+    font-size: 13px;
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────────────── */
+.footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 40px 0;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.footer-logo span { color: var(--indigo2); }
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover { color: rgba(255,255,255,0.85); }
+
+.footer-copy {
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@@media (max-width: 900px) {
+    .hero-inner         { grid-template-columns: 1fr; }
+    .hero-visual        { display: none; }
+    .split-grid         { grid-template-columns: 1fr; }
+    .how-grid           { grid-template-columns: 1fr; gap: 16px; }
+    .step-card          { height: auto; perspective: none; }
+    .step-inner         { position: static; transform: none !important; transform-style: flat; height: auto; }
+    .step-front         { position: static; border-radius: var(--radius); }
+    .step-back          { display: none; }
+    .testimonials-grid  { grid-template-columns: 1fr; }
+    .cta-box            { grid-template-columns: 1fr; }
+    .cta-actions        { flex-direction: row; }
+}
+
+@@media (max-width: 600px) {
+    .stats-grid         { grid-template-columns: 1fr; gap: 30px; }
+    .stat-divider       { border-left: none; border-top: 1px solid var(--light); padding-top: 30px; }
+    .footer-inner       { flex-direction: column; text-align: center; }
+    .footer-links       { justify-content: center; }
+    .cta-actions        { flex-direction: column; width: 100%; }
+    .btn-amber          { width: 100%; justify-content: center; }
+}
+</style>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <div class="hero-badge">@L["HeroBadge"]</div>
+
+                <h1> @Html.Raw( L["HeroTitle"].Value.Replace( L["HeroHighlight"].Value, $"<em>{L["HeroHighlight"].Value}</em>" ) ) </h1>
+
+                <p class="hero-sub">@L["HeroSubtitle"]</p>
+
+                <div class="hero-actions">
+                    <a href="/Sessions" class="btn-primary">@L["HeroPrimaryBtn"]</a>
+                    <a href="/Sessions" class="btn-outline">@L["HeroSecondaryBtn"]</a>
+                </div>
+
+                <div class="hero-proof">
+                    <div class="hero-avatars">
+                        <div class="hero-avatar" style="background:#6366f1">A</div>
+                        <div class="hero-avatar" style="background:#f59e0b">J</div>
+                        <div class="hero-avatar" style="background:#10b981">M</div>
+                        <div class="hero-avatar" style="background:#ef4444">S</div>
+                    </div>
+                    <span>@L["HeroUsers"]</span>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="hero-card-title">@L["HeroCardTitle"]</div>
+
+                    <div class="session-item">
+                        <div class="session-icon" style="background:rgba(99,102,241,0.2)">📐</div>
+                        <div class="session-info">
+                            <div class="session-name">@L["Session1Title"]</div>
+                            <div class="session-meta">@L["Session1Meta"]</div>
+                        </div>
+                        <div class="session-spots spots-open">
+                            @L["Session1Spots", 3]
+                        </div>
+                    </div>
+
+                    <div class="session-item">
+                        <div class="session-icon" style="background:rgba(245,158,11,0.2)">💻</div>
+                        <div class="session-info">
+                            <div class="session-name">@L["Session2Title"]</div>
+                            <div class="session-meta">@L["Session2Meta"]</div>
+                        </div>
+                        <div class="session-spots spots-few">
+                            @L["Session2Spots", 1]
+                        </div>
+                    </div>
+
+                    <div class="session-item">
+                        <div class="session-icon" style="background:rgba(16,185,129,0.2)">🧬</div>
+                        <div class="session-info">
+                            <div class="session-name">@L["Session3Title"]</div>
+                            <div class="session-meta">@L["Session3Meta"]</div>
+                        </div>
+                        <div class="session-spots spots-open">
+                            @L["Session3Spots", 5]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="floating-badge">
+                    @L["HeroFloatingBadge", 12]
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ STATS ══════════════════════════════════════════════════════ -->
+<section class="stats-band">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-num">1.200+</div>
+                <div class="stat-label">@L["StatsSessions"]</div>
+            </div>
+            <div class="stat-item stat-divider">
+                <div class="stat-num">3.500+</div>
+                <div class="stat-label">@L["StatsStudents"]</div>
+            </div>
+            <div class="stat-item stat-divider">
+                <div class="stat-num">150+</div>
+                <div class="stat-label">@L["StatsSubjects"]</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ SPLIT ══════════════════════════════════════════════════════ -->
+<section class="section">
+    <div class="container">
+        <div class="split-grid">
+            <div class="split-img-wrap">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop"
+                     alt="@L["SplitImageAlt"]" />
+
+                <div class="split-img-overlay">
+                    <div class="overlay-icon">🎯</div>
+                    <div class="overlay-text">
+                        <strong>@L["SplitOverlayTitle"]</strong>
+                        <span>@L["SplitOverlayText"]</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-text">
+                <div class="tag">@L["SplitTag"]</div>
+
+                <!-- FIXED: was StatsTitle -->
+                <h2>@L["SplitTitle"]</h2>
+
+                <p>@L["SplitText"]</p>
+
+                <ul class="feature-list">
+                    <li><div class="feature-check">✓</div> @L["Feature1"]</li>
+                    <li><div class="feature-check">✓</div> @L["Feature2"]</li>
+                    <li><div class="feature-check">✓</div> @L["Feature3"]</li>
+                    <li><div class="feature-check">✓</div> @L["Feature4"]</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══════════════════════════════════════════════ -->
+<section class="how-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="tag">@L["HowTag"]</div>
+
+            <!-- FIXED typo -->
+            <h2 class="section-title">
+                @L["HowTitle"]<br>
+                @L["HowTitleHighlight"]
+            </h2>
+        </div>
+
+        <div class="how-grid">
+
+            <!-- STEP 1 -->
+            <div class="step-card">
+                <div class="step-inner">
+                    <div class="step-front">
+                        <div class="step-num">01</div>
+                        <h3>@L["Step1Title"]</h3>
+                        <p>@L["Step1Desc"]</p>
+                    </div>
+                    <div class="step-back">
+                        <h3>🗓 @L["Step1Title"]</h3>
+                        <p>@L["Step1DescDetailed"]</p>
+                        <ul>
+                            <li>@L["Step1Item1"]</li>
+                            <li>@L["Step1Item2"]</li>
+                            <li>@L["Step1Item3"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step-card">
+                <div class="step-inner">
+                    <div class="step-front">
+                        <div class="step-num">02</div>
+                        <h3>@L["Step2Title"]</h3>
+                        <p>@L["Step2Desc"]</p>
+                    </div>
+                    <div class="step-back">
+                        <h3>🤝 @L["Step2Title"]</h3>
+                        <p>@L["Step2DescDetailed"]</p>
+                        <ul>
+                            <li>@L["Step2Item1"]</li>
+                            <li>@L["Step2Item2"]</li>
+                            <li>@L["Step2Item3"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step-card">
+                <div class="step-inner">
+                    <div class="step-front">
+                        <div class="step-num">03</div>
+                        <h3>@L["Step3Title"]</h3>
+                        <p>@L["Step3Desc"]</p>
+                    </div>
+                    <div class="step-back">
+                        <h3>🚀 @L["Step3Title"]</h3>
+                        <p>@L["Step3DescDetailed"]</p>
+                        <ul>
+                            <li>@L["Step3Item1"]</li>
+                            <li>@L["Step3Item2"]</li>
+                            <li>@L["Step3Item3"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══ SLIDER ═════════════════════════════════════════════════════ -->
+<section class="slider-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="tag" style="background:rgba(67,56,202,0.1); color:var(--indigo)">
+                @L["CategoriesTag"]
+            </div>
+            <h2 class="section-title">@L["CategoriesTitle"]</h2>
+        </div>
+    </div>
+
+    <div class="slider-wrapper" id="sliderWrapper">
+        <div class="slider-track" id="sliderTrack">
+            <a href="/Sessions?category=group"       class="slide"><span class="slide-emoji">👥</span>@L["CatGroup"]</a>
+            <a href="/Sessions?category=programming" class="slide"><span class="slide-emoji">💻</span>@L["CatProgramming"]</a>
+            <a href="/Sessions?category=math"        class="slide"><span class="slide-emoji">📐</span>@L["CatMath"]</a>
+            <a href="/Sessions?category=exam"        class="slide"><span class="slide-emoji">📝</span>@L["CatExam"]</a>
+            <a href="/Sessions?category=science"     class="slide"><span class="slide-emoji">🔬</span>@L["CatScience"]</a>
+            <a href="/Sessions?category=language"    class="slide"><span class="slide-emoji">🌍</span>@L["CatLanguage"]</a>
+            <a href="/Sessions?category=business"    class="slide"><span class="slide-emoji">📊</span>@L["CatBusiness"]</a>
+            <a href="/Sessions?category=design"      class="slide"><span class="slide-emoji">🎨</span>@L["CatDesign"]</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══════════════════════════════════════════════ -->
+<section class="section testimonial-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="tag">@L["TestimonialsTag"]</div>
+            <h2 class="section-title">@L["TestimonialsTitle"]</h2>
+        </div>
+
+        <div class="testimonials-grid">
+
+            <!-- TESTIMONIAL 1 -->
+            <div class="testimonial">
+                <div class="stars">★★★★★</div>
+                <p class="quote-text">"@L["Testimonial1Text"]"</p>
+                <div class="quote-author">
+                    <div class="author-avatar" style="background:#6366f1">A</div>
+                    <div>
+                        <div class="author-name">@L["Testimonial1Name"]</div>
+                        <div class="author-role">@L["Testimonial1Role"]</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TESTIMONIAL 2 -->
+            <div class="testimonial">
+                <div class="stars">★★★★★</div>
+                <p class="quote-text">"@L["Testimonial2Text"]"</p>
+                <div class="quote-author">
+                    <div class="author-avatar" style="background:#f59e0b">J</div>
+                    <div>
+                        <div class="author-name">@L["Testimonial2Name"]</div>
+                        <div class="author-role">@L["Testimonial2Role"]</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TESTIMONIAL 3 -->
+            <div class="testimonial">
+                <div class="stars">★★★★★</div>
+                <p class="quote-text">"@L["Testimonial3Text"]"</p>
+                <div class="quote-author">
+                    <div class="author-avatar" style="background:#10b981">M</div>
+                    <div>
+                        <div class="author-name">@L["Testimonial3Name"]</div>
+                        <div class="author-role">@L["Testimonial3Role"]</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CTA ════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box">
+            <div class="cta-content">
+                <h2>@L["CtaTitle"]</h2>
+                <p>@L["CtaText"]</p>
+            </div>
+            <div class="cta-actions">
+                <a href="/Sessions" class="btn-amber">@L["CtaButton"]</a>
+                <span class="cta-note">@L["CtaNote"]</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <a href="/" class="footer-logo">Study <span>Groups</span></a>
+            <div class="footer-links">
+                <a href="/">@L["FooterHome"]</a>
+                <a href="/Sessions">@L["FooterSessions"]</a>
+                <a href="#">@L["FooterAbout"]</a>
+            </div>
+            <span>@L["FooterCopy"]</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+(function () {
+    const track   = document.getElementById("sliderTrack");
+    const wrapper = document.getElementById("sliderWrapper");
+
+    // duplicate for infinite loop
+    track.innerHTML += track.innerHTML;
+
+    let pos    = 0;
+    const speed = 0.6;
+    let paused = false;
+
+    wrapper.addEventListener("mouseenter", () => paused = true);
+    wrapper.addEventListener("mouseleave", () => paused = false);
+
+    function animate() {
+        if (!paused) {
+            pos -= speed;
+            if (Math.abs(pos) >= track.scrollWidth / 2) pos = 0;
+            track.style.transform = `translateX(${pos}px)`;
+        }
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+})();
+</script>

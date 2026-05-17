@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="StudyGroups.API/StudyGroups.API.csproj" />
+  <Project Path="StudyGroups.Client/StudyGroups.Client.csproj" />
+  <Project Path="StudyGroups.Contracts/StudyGroups.Contracts.csproj" />
+  <Project Path="StudyGroups.Core/StudyGroups.Core.csproj" />
+  <Project Path="StudyGroups.Http/StudyGroups.Http.csproj" Id="b47c3155-97e7-4c43-8314-54e120617ca8" />
+  <Project Path="StudyGroups.Infrastructure/StudyGroups.Infrastructure.csproj" />
+  <Project Path="StudyGroups.Web/StudyGroups.Web.csproj" />
+</Solution>

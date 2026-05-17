@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- HERO -->
+  <data name="HeroBadge"><value>Now live – free to use</value></data>
+  <data name="HeroTitle"><value>Study smarter together</value></data>
+  <data name="HeroHighlight"><value>smarter</value></data>
+  <data name="HeroSubtitle"><value>Create, join and collaborate in study sessions within seconds.</value></data>
+  <data name="HeroPrimaryBtn"><value>Get started →</value></data>
+  <data name="HeroSecondaryBtn"><value>Browse sessions</value></data>
+  <data name="HeroUsers"><value>+3,500 students are already using the platform</value></data>
+
+  <!-- HERO VISUAL -->
+  <data name="HeroCardTitle"><value>📚 Active sessions</value></data>
+
+  <data name="Session1Title"><value>Linear Algebra – Group B</value></data>
+  <data name="Session1Meta"><value>Today at 14:00 · Library</value></data>
+  <data name="Session1Spots"><value>{0} spots left</value></data>
+
+  <data name="Session2Title"><value>Python exam prep</value></data>
+  <data name="Session2Meta"><value>Today at 16:30 · Online</value></data>
+  <data name="Session2Spots"><value>{0} spot left</value></data>
+
+  <data name="Session3Title"><value>Biochemistry exam practice</value></data>
+  <data name="Session3Meta"><value>Tomorrow at 10:00 · Room 204</value></data>
+  <data name="Session3Spots"><value>{0} spots left</value></data>
+
+  <data name="HeroFloatingBadge"><value>🔥 {0} new sessions today</value></data>
+
+  <!-- STATS -->
+  <data name="StatsSessions"><value>Sessions created</value></data>
+  <data name="StatsStudents"><value>Students joined</value></data>
+  <data name="StatsSubjects"><value>Subjects covered</value></data>
+
+  <!-- SPLIT -->
+  <data name="SplitTag"><value>Collaboration</value></data>
+  <data name="SplitTitle"><value>Collaborate effectively with others</value></data>
+  <data name="SplitText"><value>Studying alone can be tough. Our platform connects you with students working on the same topics so you stay motivated and learn faster.</value></data>
+
+  <!-- SPLIT OVERLAY -->
+  <data name="SplitImageAlt"><value>Students collaborating</value></data>
+  <data name="SplitOverlayTitle"><value>Focused learning</value></data>
+  <data name="SplitOverlayText"><value>Study with structure and goals</value></data>
+
+  <data name="Feature1"><value>Find sessions near you or online</value></data>
+  <data name="Feature2"><value>See available spots in real time</value></data>
+  <data name="Feature3"><value>Create your own session in under a minute</value></data>
+  <data name="Feature4"><value>Completely free to use</value></data>
+
+  <!-- HOW -->
+  <data name="HowTag"><value>How it works</value></data>
+  <data name="HowTitle"><value>From idea to study group</value></data>
+  <data name="HowTitleHighlight"><value>in three steps</value></data>
+
+  <!-- STEP 1 -->
+  <data name="Step1Title"><value>Create session</value></data>
+  <data name="Step1Desc"><value>Start a study session in seconds</value></data>
+  <data name="Step1DescDetailed"><value>Choose subject, time and place. Set participant limits.</value></data>
+
+  <data name="Step1Item1"><value>Choose topic</value></data>
+  <data name="Step1Item2"><value>Date &amp; time</value></data>
+  <data name="Step1Item3"><value>Max participants</value></data>
+
+  <!-- STEP 2 -->
+  <data name="Step2Title"><value>Invite &amp; join</value></data>
+  <data name="Step2Desc"><value>Connect with other students and join sessions</value></data>
+  <data name="Step2DescDetailed"><value>Browse sessions or join instantly.</value></data>
+
+  <data name="Step2Item1"><value>Live availability</value></data>
+  <data name="Step2Item2"><value>Instant signup</value></data>
+  <data name="Step2Item3"><value>No conflicts</value></data>
+
+  <!-- STEP 3 -->
+  <data name="Step3Title"><value>Study together</value></data>
+  <data name="Step3Desc"><value>Meet physically or online and reach your goals</value></data>
+  <data name="Step3DescDetailed"><value>Meet in person or online. Keep track of participants.</value></data>
+
+  <data name="Step3Item1"><value>Shared focus</value></data>
+  <data name="Step3Item2"><value>Better motivation</value></data>
+  <data name="Step3Item3"><value>Higher success rate</value></data>
+
+  <!-- SLIDER -->
+  <data name="CategoriesTag"><value>Categories</value></data>
+  <data name="CategoriesTitle"><value>Popular subjects</value></data>
+
+  <data name="CatGroup"><value>Group Study</value></data>
+  <data name="CatProgramming"><value>Programming</value></data>
+  <data name="CatMath"><value>Math</value></data>
+  <data name="CatExam"><value>Exam Preparation</value></data>
+  <data name="CatScience"><value>Science</value></data>
+  <data name="CatLanguage"><value>Languages</value></data>
+  <data name="CatBusiness"><value>Business</value></data>
+  <data name="CatDesign"><value>Design</value></data>
+
+  <!-- TESTIMONIALS -->
+  <data name="TestimonialsTag"><value>Testimonials</value></data>
+  <data name="TestimonialsTitle"><value>What students say</value></data>
+
+  <data name="Testimonial1Text">
+    <value>This platform helped me pass my exams! I found a study group for statistics and we met three times a week.</value>
+  </data>
+  <data name="Testimonial1Name"><value>Anna K.</value></data>
+  <data name="Testimonial1Role"><value>Computer Science Student</value></data>
+
+  <data name="Testimonial2Text">
+    <value>Much better than studying alone. I found people with the same goals and we kept each other accountable.</value>
+  </data>
+  <data name="Testimonial2Name"><value>Jonas M.</value></data>
+  <data name="Testimonial2Role"><value>Mechanical Engineering Student</value></data>
+
+  <data name="Testimonial3Text">
+    <value>Super easy to use. I created a session and had three participants within ten minutes.</value>
+  </data>
+  <data name="Testimonial3Name"><value>Maria L.</value></data>
+  <data name="Testimonial3Role"><value>Medical Student</value></data>
+
+  <!-- CTA -->
+  <data name="CtaTitle"><value>Ready to study smarter?</value></data>
+  <data name="CtaText"><value>Join thousands of students already improving their learning.</value></data>
+  <data name="CtaButton"><value>Start now →</value></data>
+  <data name="CtaNote"><value>Free · No signup required</value></data>
+
+  <!-- FOOTER -->
+  <data name="FooterHome"><value>Home</value></data>
+  <data name="FooterSessions"><value>Sessions</value></data>
+  <data name="FooterAbout"><value>About</value></data>
+  <data name="FooterCopy"><value>© 2026 Study Groups. All rights reserved.</value></data>
+
+</root>
