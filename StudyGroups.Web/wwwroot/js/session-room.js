@@ -430,10 +430,11 @@
             if (!response.ok) throw new Error(await response.text());
             const info = await response.json();
 
-            room = new LivekitClient.Room({
+            /*room = new LivekitClient.Room({
                 adaptiveStream: true,
                 dynacast: true
-            });
+            });*/
+			room = new LivekitClient.Room();
 
             room
                 .on(LivekitClient.RoomEvent.TrackSubscribed, (track, publication, participant) => {
@@ -537,9 +538,10 @@
             cameraBtn.disabled = false;
             micBtn.disabled = false;
             leaveBtn.disabled = false;
-        } catch (error) {
-            setStatus(`Could not connect: ${error.message}`);
-        }
+			} catch (error) {
+				console.error(error);
+				setStatus(`Could not connect: ${error.message}`);
+			}
     }
 
     async function toggleCamera() {

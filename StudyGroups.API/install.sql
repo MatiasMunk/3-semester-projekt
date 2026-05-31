@@ -75,7 +75,8 @@ CREATE TABLE StudySessions (
     CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
 	
     FOREIGN KEY (CreatedByUserId) REFERENCES Users(Id),
-    FOREIGN KEY (TopicId) REFERENCES Topics(Id)
+    FOREIGN KEY (TopicId) REFERENCES Topics(Id),
+    FOREIGN KEY (OwnerId) REFERENCES Users(Id),
 
     CONSTRAINT StudySessions_MaxParticipants_Positive CHECK (MaxParticipants > 0),
     CONSTRAINT StudySessions_CurrentParticipants_Valid CHECK (CurrentParticipants >= 0 AND CurrentParticipants <= MaxParticipants)
@@ -92,7 +93,7 @@ CREATE TABLE SessionParticipants (
 
     JoinedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
 
-    FOREIGN KEY (SessionId) REFERENCES StudySessions(Id),
+    FOREIGN KEY (SessionId) REFERENCES StudySessions(Id) ON DELETE CASCADE,
     FOREIGN KEY (UserId) REFERENCES Users(Id),
 
     CONSTRAINT SessionUser UNIQUE (SessionId, UserId)
