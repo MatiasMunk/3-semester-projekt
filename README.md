@@ -463,4 +463,8 @@ StudyGroups demonstrates:
 - Modular software architecture
 - Agile Scrum-based development
 
+<<<<<<< HEAD
 The project provides a scalable and maintainable foundation for collaborative student learning platforms with both traditional and realtime communication capabilities.
+=======
+The project provides a scalable and maintainable foundation for collaborative student learning platforms with both traditional and realtime communication capabilities.
+>>>>>>> 4a2220a9eb536e845dca7a37d60fd13a93cc6bf3
