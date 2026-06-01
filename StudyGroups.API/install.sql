@@ -116,7 +116,7 @@ CREATE TABLE PrivateMessages (
     IsRead BIT NOT NULL DEFAULT 0,
     CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
 
-    FOREIGN KEY (SessionId) REFERENCES StudySessions(Id),
+    FOREIGN KEY (SessionId) REFERENCES StudySessions(Id) ON DELETE CASCADE,
     FOREIGN KEY (SenderId) REFERENCES Users(Id),
     FOREIGN KEY (ReceiverId) REFERENCES Users(Id),
 

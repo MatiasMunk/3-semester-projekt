@@ -1,0 +1,184 @@
+<svg viewBox="0 0 1700 1010" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1700" height="1010" fill="#ffffff"/>
+<text x="850.0" y="40" text-anchor="middle" font-size="26" font-weight="bold" fill="#222">Study Groups &#8211; Domain Model (UML)</text>
+<polyline points="150,410 150,206" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="124.4" y="287" width="51.2" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="150" y="300" text-anchor="middle" font-size="13" fill="#333">UserId</text>
+<text x="160" y="402" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="165" y="226" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="245,410 245,206" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="204.8" y="257" width="94.4" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="252" y="270" text-anchor="middle" font-size="13" fill="#333">FriendUserId</text>
+<text x="255" y="402" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="260" y="226" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="330,445 500,445 500,150 660,150" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="368.4" y="424" width="123.2" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="430" y="437" text-anchor="middle" font-size="13" fill="#333">sends / receives</text>
+<text x="340" y="438" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="648" y="143" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="330,500 560,500 560,450 660,450" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="440.8" y="479" width="58.4" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="470" y="492" text-anchor="middle" font-size="13" fill="#333">creates</text>
+<text x="340" y="493" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="648" y="443" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="150,588 150,725 690,725" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="380.8" y="704" width="58.4" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="410" y="717" text-anchor="middle" font-size="13" fill="#333">creates</text>
+<text x="160" y="610" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="678" y="718" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="250,588 250,775 690,775" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="391.6" y="754" width="36.8" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="410" y="767" text-anchor="middle" font-size="13" fill="#333">owns</text>
+<text x="265" y="610" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="678" y="768" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="330,560 610,560 610,605 1240,605 1240,455 1350,455" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="883.0" y="584" width="44.0" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="905" y="597" text-anchor="middle" font-size="13" fill="#333">joins</text>
+<text x="340" y="553" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="1338" y="448" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="1000,705 1170,705 1170,480 1350,480" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="1060.2" y="684" width="29.6" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="1075" y="697" text-anchor="middle" font-size="13" fill="#333">has</text>
+<text x="1036" y="698" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="1338" y="473" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="955,640 955,268" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="953.2" y="427" width="29.6" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="968" y="440" text-anchor="middle" font-size="13" fill="#333">has</text>
+<text x="972" y="630" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="972" y="292" text-anchor="middle" font-size="13" fill="#222">*</text>
+<polyline points="1350,745 1000,745" fill="none" stroke="#5f5f5f" stroke-width="1.6"/>
+<rect x="1107.2" y="724" width="65.6" height="18" fill="#ffffff" opacity="0.9"/>
+<text x="1140" y="737" text-anchor="middle" font-size="13" fill="#333">contains</text>
+<text x="1338" y="737" text-anchor="middle" font-size="13" fill="#222">1</text>
+<text x="1012" y="737" text-anchor="middle" font-size="13" fill="#222">*</text>
+<rect x="70" y="70" width="250" height="136" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="70" y="70" width="250" height="36" fill="#f5f5f5" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="88" y="94" font-size="15">👥</text>
+<text x="203.0" y="94" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Friendships</text>
+<line x1="70" y1="106" x2="320" y2="106" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="123" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="70" y1="131" x2="320" y2="131" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="148" font-size="13" fill="#222" font-weight="normal">+ UserId : INT (FK)</text>
+<line x1="70" y1="156" x2="320" y2="156" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="173" font-size="13" fill="#222" font-weight="normal">+ FriendUserId : INT (FK)</text>
+<line x1="70" y1="181" x2="320" y2="181" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="198" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<rect x="660" y="55" width="300" height="211" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="660" y="55" width="300" height="36" fill="#e1d5e7" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="678" y="79" font-size="15">💬</text>
+<text x="818.0" y="79" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">PrivateMessages</text>
+<line x1="660" y1="91" x2="960" y2="91" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="108" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="660" y1="116" x2="960" y2="116" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="133" font-size="13" fill="#222" font-weight="normal">+ SessionId : INT (FK)</text>
+<line x1="660" y1="141" x2="960" y2="141" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="158" font-size="13" fill="#222" font-weight="normal">+ SenderId : INT (FK)</text>
+<line x1="660" y1="166" x2="960" y2="166" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="183" font-size="13" fill="#222" font-weight="normal">+ ReceiverId : INT (FK)</text>
+<line x1="660" y1="191" x2="960" y2="191" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="208" font-size="13" fill="#222" font-weight="normal">+ Message : NVARCHAR(MAX)</text>
+<line x1="660" y1="216" x2="960" y2="216" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="233" font-size="13" fill="#222" font-weight="normal">+ IsRead : BIT</text>
+<line x1="660" y1="241" x2="960" y2="241" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="258" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<rect x="70" y="410" width="260" height="186" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="70" y="410" width="260" height="36" fill="#d5e8d4" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="88" y="434" font-size="15">👤</text>
+<text x="208.0" y="434" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Users</text>
+<line x1="70" y1="446" x2="330" y2="446" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="463" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="70" y1="471" x2="330" y2="471" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="488" font-size="13" fill="#222" font-weight="normal">+ Username : NVARCHAR(100)</text>
+<line x1="70" y1="496" x2="330" y2="496" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="513" font-size="13" fill="#222" font-weight="normal">+ PasswordHash : NVARCHAR(255)</text>
+<line x1="70" y1="521" x2="330" y2="521" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="538" font-size="13" fill="#222" font-weight="normal">+ Email : NVARCHAR(255)</text>
+<line x1="70" y1="546" x2="330" y2="546" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="563" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<line x1="70" y1="571" x2="330" y2="571" stroke="#dddddd" stroke-width="0.8"/>
+<text x="82" y="588" font-size="13" fill="#222" font-weight="normal">+ Role : NVARCHAR(255)</text>
+<rect x="660" y="400" width="280" height="186" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="660" y="400" width="280" height="36" fill="#f5f5f5" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="678" y="424" font-size="15">👥</text>
+<text x="808.0" y="424" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">FriendRequests</text>
+<line x1="660" y1="436" x2="940" y2="436" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="453" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="660" y1="461" x2="940" y2="461" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="478" font-size="13" fill="#222" font-weight="normal">+ SenderId : INT (FK)</text>
+<line x1="660" y1="486" x2="940" y2="486" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="503" font-size="13" fill="#222" font-weight="normal">+ ReceiverId : INT (FK)</text>
+<line x1="660" y1="511" x2="940" y2="511" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="528" font-size="13" fill="#222" font-weight="normal">+ Status : NVARCHAR(20)</text>
+<line x1="660" y1="536" x2="940" y2="536" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="553" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<line x1="660" y1="561" x2="940" y2="561" stroke="#dddddd" stroke-width="0.8"/>
+<text x="672" y="578" font-size="13" fill="#222" font-weight="normal">+ RespondedAt : DATETIME2</text>
+<rect x="1350" y="380" width="300" height="136" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="1350" y="380" width="300" height="36" fill="#dae8fc" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="1368" y="404" font-size="15">👥</text>
+<text x="1508.0" y="404" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">SessionParticipants</text>
+<line x1="1350" y1="416" x2="1650" y2="416" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="433" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="1350" y1="441" x2="1650" y2="441" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="458" font-size="13" fill="#222" font-weight="normal">+ SessionId : INT (FK)</text>
+<line x1="1350" y1="466" x2="1650" y2="466" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="483" font-size="13" fill="#222" font-weight="normal">+ UserId : INT (FK)</text>
+<line x1="1350" y1="491" x2="1650" y2="491" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="508" font-size="13" fill="#222" font-weight="normal">+ JoinedAt : DATETIME2</text>
+<rect x="690" y="640" width="310" height="336" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="690" y="640" width="310" height="36" fill="#f8cecc" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="708" y="664" font-size="15">🗂</text>
+<text x="853.0" y="664" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">StudySessions</text>
+<line x1="690" y1="676" x2="1000" y2="676" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="693" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="690" y1="701" x2="1000" y2="701" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="718" font-size="13" fill="#222" font-weight="normal">+ Title : NVARCHAR(255)</text>
+<line x1="690" y1="726" x2="1000" y2="726" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="743" font-size="13" fill="#222" font-weight="normal">+ Description : NVARCHAR(MAX)</text>
+<line x1="690" y1="751" x2="1000" y2="751" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="768" font-size="13" fill="#222" font-weight="normal">+ TopicId : INT (FK)</text>
+<line x1="690" y1="776" x2="1000" y2="776" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="793" font-size="13" fill="#222" font-weight="normal">+ Location : NVARCHAR(255)</text>
+<line x1="690" y1="801" x2="1000" y2="801" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="818" font-size="13" fill="#222" font-weight="normal">+ StartTime : DATETIME2</text>
+<line x1="690" y1="826" x2="1000" y2="826" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="843" font-size="13" fill="#222" font-weight="normal">+ EndTime : DATETIME2</text>
+<line x1="690" y1="851" x2="1000" y2="851" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="868" font-size="13" fill="#222" font-weight="normal">+ MaxParticipants : INT</text>
+<line x1="690" y1="876" x2="1000" y2="876" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="893" font-size="13" fill="#222" font-weight="normal">+ CurrentParticipants : INT</text>
+<line x1="690" y1="901" x2="1000" y2="901" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="918" font-size="13" fill="#222" font-weight="normal">+ CreatedByUserId : INT (FK)</text>
+<line x1="690" y1="926" x2="1000" y2="926" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="943" font-size="13" fill="#222" font-weight="normal">+ OwnerId : INT (FK)</text>
+<line x1="690" y1="951" x2="1000" y2="951" stroke="#dddddd" stroke-width="0.8"/>
+<text x="702" y="968" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<rect x="1350" y="690" width="290" height="186" fill="#ffffff" stroke="#5a5a5a" stroke-width="1.4"/>
+<rect x="1350" y="690" width="290" height="36" fill="#ffe6cc" stroke="#5a5a5a" stroke-width="1.4"/>
+<text x="1368" y="714" font-size="15">🏷</text>
+<text x="1503.0" y="714" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Topics</text>
+<line x1="1350" y1="726" x2="1640" y2="726" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="743" font-size="13" fill="#222" font-weight="normal">+ Id : INT (PK)</text>
+<line x1="1350" y1="751" x2="1640" y2="751" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="768" font-size="13" fill="#222" font-weight="normal">+ Name : NVARCHAR(100)</text>
+<line x1="1350" y1="776" x2="1640" y2="776" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="793" font-size="13" fill="#222" font-weight="normal">+ Slug : NVARCHAR(100)</text>
+<line x1="1350" y1="801" x2="1640" y2="801" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="818" font-size="13" fill="#222" font-weight="normal">+ Icon : NVARCHAR(10)</text>
+<line x1="1350" y1="826" x2="1640" y2="826" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="843" font-size="13" fill="#222" font-weight="normal">+ Color : NVARCHAR(20)</text>
+<line x1="1350" y1="851" x2="1640" y2="851" stroke="#dddddd" stroke-width="0.8"/>
+<text x="1362" y="868" font-size="13" fill="#222" font-weight="normal">+ CreatedAt : DATETIME2</text>
+<polyline points="144,215 150,206 156,215" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="239,215 245,206 251,215" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="651,144 660,150 651,156" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="651,444 660,450 651,456" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="681,719 690,725 681,731" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="681,769 690,775 681,781" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="1341,449 1350,455 1341,461" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="1341,474 1350,480 1341,486" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="949,277 955,268 961,277" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polyline points="1009,739 1000,745 1009,751" fill="none" stroke="#5f5f5f" stroke-width="1.8"/>
+<polygon points="1000,705 1010.0,699.0 1020,705 1010.0,711.0" fill="#5f5f5f" stroke="#5f5f5f" stroke-width="1"/>
+<polygon points="955,640 949.0,630.0 955,620 961.0,630.0" fill="#5f5f5f" stroke="#5f5f5f" stroke-width="1"/>
+</svg>
